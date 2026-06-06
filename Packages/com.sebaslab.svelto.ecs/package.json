@@ -1,0 +1,29 @@
+{
+  "displayName": "Svelto ECS",
+  "category": "Svelto",
+  "description": "Svelto ECS C# Lightweight Data Oriented Entity Component System Framework",
+  "author": {
+    "name": "Sebastiano Mandala",
+    "url": "https://www.sebaslab.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sebas77/Svelto.ECS.git"
+  },
+  "dependencies": {
+    "com.sebaslab.svelto.common": "3.5.2"
+  },
+  "keywords": [
+    "svelto",
+    "ecs",
+    "svelto.ecs"
+  ],
+  "name": "com.sebaslab.svelto.ecs",
+  "version": "3.5.2",
+  "type": "library",
+  "unity": "2021.3",
+  "publishConfig": {
+    "registry": "https://package.openupm.com"
+  },
+  "_fingerprint": "cb1dcb33151f4a7adb5322ac3a39753d07026b0a"
+}
