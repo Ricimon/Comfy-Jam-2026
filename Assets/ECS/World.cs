@@ -24,6 +24,8 @@ namespace ECS
             var entityFunctions = enginesRoot.GenerateEntityFunctions();
         }
 
+        public bool IsValid() => enginesRoot.IsValid();
+
         public void Dispose()
         {
             enginesRoot.Dispose();
