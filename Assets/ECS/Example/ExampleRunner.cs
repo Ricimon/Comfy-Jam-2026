@@ -12,13 +12,13 @@ namespace ECS.Example
 
             world.AddSystem(new ExampleSystem());
 
-            var entity1 = world.Entity<ExampleEntityDescriptor>();
+            var entity1 = world.Entity<ExampleEntityDescriptor>(ExampleGroup.Group);
             entity1.Init(new ExampleComponent
             {
                 AddToFilter = true,
             });
 
-            var entity2 = world.Entity<ExampleEntityDescriptor>();
+            var entity2 = world.Entity<ExampleEntityDescriptor>(ExampleGroup.Group);
             entity2.Init(new ExampleComponent
             {
                 AddToFilter = false,

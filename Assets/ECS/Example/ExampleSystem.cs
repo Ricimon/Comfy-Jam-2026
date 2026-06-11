@@ -18,7 +18,7 @@ namespace ECS.Example
 
         public void Update()
         {
-            var (components, entityIDs, count) = entitiesDB.QueryEntities<ExampleComponent>(World.DefaultGroup);
+            var (components, entityIDs, count) = entitiesDB.QueryEntities<ExampleComponent>(ExampleGroup.Group);
             var exampleFilter = filters.GetTransientFilter<ExampleComponent>(ExampleFilters.ExampleFilter);
             Debug.Log($"ExampleSystem found {count} example entities, {exampleFilter.ComputeFinalCount()} filtered entities");
         }

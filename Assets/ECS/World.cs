@@ -7,11 +7,10 @@ namespace ECS
 {
     public class World : IDisposable
     {
-        public static ExclusiveGroup DefaultGroup = new();
-
         private readonly EnginesRoot enginesRoot;
         private readonly EntitiesSubmissionScheduler entitiesSubmissionScheduler;
         private readonly IEntityFactory entityFactory;
+        private readonly IEntityFunctions entityFunctions;
         private readonly List<ISystem> systems = new();
         private readonly IdPool idPool = new();
 
@@ -21,13 +20,20 @@ namespace ECS
             enginesRoot = new(entitiesSubmissionScheduler);
 
             entityFactory = enginesRoot.GenerateEntityFactory();
-            var entityFunctions = enginesRoot.GenerateEntityFunctions();
+            entityFunctions = enginesRoot.GenerateEntityFunctions();
         }
 
         public bool IsValid() => enginesRoot.IsValid();
 
         public void Dispose()
         {
+            foreach(var system in systems)
+            {
+                if (system is IDisposable d)
+                {
+                    d.Dispose();
+                }
+            }
             enginesRoot.Dispose();
         }
 
@@ -37,11 +43,16 @@ namespace ECS
             systems.Add(system);
         }
 
-        public EntityInitializer Entity<T>() where T : IEntityDescriptor, new()
+        public EntityInitializer Entity<T>(ExclusiveGroupStruct groupID) where T : IEntityDescriptor, new()
         {
             var id = idPool.Get();
-            var initializer = entityFactory.BuildEntity<T>(new EGID(id, DefaultGroup));
+            var initializer = entityFactory.BuildEntity<T>(new EGID(id, groupID));
             return initializer;
+        }
+
+        public void RemoveEntity<T>(EGID egid) where T : IEntityDescriptor, new()
+        {
+            entityFunctions.RemoveEntity<T>(egid);
         }
 
         public void Progress()

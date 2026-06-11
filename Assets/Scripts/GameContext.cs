@@ -14,5 +14,6 @@ public class GameContext
 
         // Systems
         World.AddSystem(new PositionSystem());
+        World.AddSystem(new InputSystem());
     }
 }

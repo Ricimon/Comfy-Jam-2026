@@ -12,14 +12,19 @@ public class PositionSystem : ISystem, IQueryingEntitiesEngine
 
     public void Update()
     {
-        var (goRefs, positions, count) = entitiesDB.QueryEntities<GameObjectReference, Position>(World.DefaultGroup);
-        for (var i = 0; i < count; i++)
-        {
-            var go = GameContext.GameObjectResourceManager[goRefs[i].Id];
+        var groups = entitiesDB.FindGroups<GameObjectReference, Position>();
 
-            if (go != null)
+        var g = entitiesDB.QueryEntities<GameObjectReference, Position>(groups);
+        foreach(var ((goRefs, positions, count), _) in g)
+        {
+            for (var i = 0; i < count; i++)
             {
-                go.transform.position = positions[i].Value;
+                var go = GameContext.GameObjectResourceManager[goRefs[i].Id];
+
+                if (go != null)
+                {
+                    go.transform.position = positions[i].Value;
+                }
             }
         }
     }

@@ -7,7 +7,13 @@ public class ECSRunner : MonoBehaviour
 {
     private void Start()
     {
-        RunWorldInEarlyUpdate();
+        // can't do this because InputSystem needs to be ran in Update
+        // RunWorldInEarlyUpdate();
+    }
+
+    private void Update()
+    {
+        GameContext.World.Progress();
     }
 
     private void OnDestroy()
