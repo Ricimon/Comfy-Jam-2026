@@ -18,8 +18,6 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
     private UnityEngine.Canvas canvas;
     private RectTransform canvasRt;
     private GraphicRaycaster grc;
-    private bool dragging;
-    private Vector2 lastPointerDragPosition;
 
     public InputSystem()
     {
@@ -82,47 +80,24 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                 // Debug.Log($"Released at {pointerLocation}");
 
                 GetDraggingFilter().Clear();
-
-                dragging = false;
             }
         }
 
         if (pointerDown)
         {
-            if (!dragging)
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRt, pointerLocation, canvas.worldCamera, out var worldPosition))
             {
-                dragging = true;
-            }
-            else
-            {
-                foreach(var (fis, group) in GetDraggingFilter())
-                {
-                    var delta = CalculateWorldPositionDelta(pointerLocation, lastPointerDragPosition);
-                    var (positions, _) = entitiesDB.QueryEntities<Position>(group);
-                    for (var i = 0; i < fis.count; i++)
+                GetDraggingFilter().RunOnFilteredComponents(entitiesDB,
+                    (ref Position p) =>
                     {
-                        var fi = fis[i];
-                        positions[fi].Value += delta;
-                    }
-                }
+                        p.Value = worldPosition;
+                    });
             }
-
-            lastPointerDragPosition = pointerLocation;
         }
     }
 
     private EntityFilterCollection GetDraggingFilter()
     {
         return entitiesDB.GetFilters().GetOrCreatePersistentFilter<Position>(draggingEntityFilter);
-    }
-
-    private Vector3 CalculateWorldPositionDelta(Vector2 newScreenPosition, Vector2 oldScreenPosition)
-    {
-        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRt, newScreenPosition, canvas.worldCamera, out var newWorldPoint) &&
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRt, oldScreenPosition, canvas.worldCamera, out var oldWorldPoint))
-        {
-            return newWorldPoint - oldWorldPoint;
-        }
-        return default;
     }
 }
