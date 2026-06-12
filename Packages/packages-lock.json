@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "com.sebaslab.svelto.common": {
-      "version": "3.5.2",
-      "depth": 1,
+      "version": "3.6.0",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "org.nuget.system.runtime.compilerservices.unsafe": "6.0.0"
@@ -210,7 +210,7 @@
     },
     "org.nuget.system.runtime.compilerservices.unsafe": {
       "version": "6.0.0",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"

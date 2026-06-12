@@ -13,7 +13,9 @@ public class GameContext
         GameObjectResourceManager = new GameObjectResourceManager();
 
         // Systems
-        World.AddSystem(new PositionSystem());
-        World.AddSystem(new InputSystem());
+        World.AddSystem(new UpdateDeltaTimeSystem());
+        World.AddSystem(new PositionSystem(GameObjectResourceManager));
+        World.AddSystem(new InputSystem(GameObjectResourceManager));
+        World.AddSystem(new SlimeSpawnerSystem());
     }
 }

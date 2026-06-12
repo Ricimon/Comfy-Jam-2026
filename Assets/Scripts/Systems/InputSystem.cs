@@ -10,17 +10,20 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
 {
     public EntitiesDB entitiesDB { get; set; }
 
+    private readonly GameObjectResourceManager gameObjectResourceManager;
     private readonly InputAction clickAction;
     private readonly InputAction pointAction;
     private readonly List<RaycastResult> raycastResults = new();
     private readonly CombinedFilterID draggingEntityFilter = new(0, FilterContextID.GetNewContextID());
 
-    private UnityEngine.Canvas canvas;
+    private Canvas canvas;
     private RectTransform canvasRt;
     private GraphicRaycaster grc;
 
-    public InputSystem()
+    public InputSystem(GameObjectResourceManager gameObjectResourceManager)
     {
+        this.gameObjectResourceManager = gameObjectResourceManager;
+
         var defaultActions = UnityEngine.InputSystem.InputSystem.actions;
         clickAction = defaultActions.FindAction("Click");
         pointAction = defaultActions.FindAction("Point");
@@ -34,12 +37,12 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
     {
         if (canvas == null || grc == null)
         {
-            var (goRefs, count) = entitiesDB.QueryEntities<GameObjectReference>(Canvas.Group);
+            var (goRefs, count) = entitiesDB.QueryEntities<GameObjectReference>(CanvasGroup.Group);
             if (count > 0)
             {
                 var goRef = goRefs[0];
-                var go = GameContext.GameObjectResourceManager[goRef.Id];
-                canvas = go.GetComponent<UnityEngine.Canvas>();
+                var go = gameObjectResourceManager[goRef.Id];
+                canvas = go.GetComponent<Canvas>();
                 canvasRt = go.GetComponent<RectTransform>();
                 grc = go.GetComponent<GraphicRaycaster>();
             }
@@ -64,7 +67,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                 foreach (var hit in raycastResults)
                 {
                     if (hit.gameObject.TryGetComponent(out EntityReferenceHolder erh) &&
-                        Slime.Includes(erh.EGID.groupID))
+                        SlimeGroup.Includes(erh.EGID.groupID))
                     {
                         // Debug.Log($"Hit {hit.gameObject}", hit.gameObject);
                         if (entitiesDB.TryQueryEntitiesAndIndex<Position>(erh.EGID, out var i, out var positions))

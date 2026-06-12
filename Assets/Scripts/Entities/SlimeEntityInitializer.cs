@@ -5,7 +5,7 @@ public class SlimeEntityInitializer : MonoBehaviour
     private void Start()
     {
         var id = GameContext.GameObjectResourceManager.Add(gameObject);
-        var entity = GameContext.World.Entity<SlimeEntityDescriptor>(Slime.BuildGroup);
+        var entity = GameContext.World.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
 
         entity.Init(new GameObjectReference
         {

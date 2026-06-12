@@ -4,4 +4,4 @@ public class CanvasEntityDescriptor : GenericEntityDescriptor<
     GameObjectReference>
 { }
 
-public class Canvas : NamedExclusiveGroup<Canvas> { }
+public class CanvasGroup : NamedExclusiveGroup<CanvasGroup> { }

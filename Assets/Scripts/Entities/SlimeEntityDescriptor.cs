@@ -6,4 +6,4 @@ public class SlimeEntityDescriptor : GenericEntityDescriptor<
     RectBoundary>
 { }
 
-public class Slime : GroupTag<Slime> { }
+public class SlimeGroup : GroupTag<SlimeGroup> { }

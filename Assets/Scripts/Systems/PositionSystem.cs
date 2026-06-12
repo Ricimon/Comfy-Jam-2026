@@ -5,6 +5,13 @@ public class PositionSystem : ISystem, IQueryingEntitiesEngine
 {
     public EntitiesDB entitiesDB { get; set; }
 
+    private readonly GameObjectResourceManager gameObjectResourceManager;
+
+    public PositionSystem(GameObjectResourceManager gameObjectResourceManager)
+    {
+        this.gameObjectResourceManager = gameObjectResourceManager;
+    }
+
     public void Ready()
     {
 
@@ -19,7 +26,7 @@ public class PositionSystem : ISystem, IQueryingEntitiesEngine
         {
             for (var i = 0; i < count; i++)
             {
-                var go = GameContext.GameObjectResourceManager[goRefs[i].Id];
+                var go = gameObjectResourceManager[goRefs[i].Id];
 
                 if (go != null)
                 {

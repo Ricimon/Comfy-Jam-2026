@@ -45,7 +45,8 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "com.sebaslab.svelto.ecs": "3.5.2"
+    "com.sebaslab.svelto.ecs": "3.5.2",
+    "com.sebaslab.svelto.common": "3.6.0"
   },
   "scopedRegistries": [
     {
