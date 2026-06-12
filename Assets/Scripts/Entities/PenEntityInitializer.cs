@@ -30,13 +30,13 @@ public class PenEntityInitializer : MonoBehaviour
             Id = id,
         });
 
-        entity.Init(new Position
-        {
-            Value = transform.position,
-        });
-
         if (TryGetComponent(out RectTransform rt))
         {
+            entity.Init(new RectPosition
+            {
+                Value = rt.anchoredPosition,
+            });
+
             entity.Init(new RectBoundary
             {
                 Width = rt.sizeDelta.x,

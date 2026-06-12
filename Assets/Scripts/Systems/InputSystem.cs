@@ -53,36 +53,37 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
 
         if (clickAction.WasPerformedThisFrame() && pointerDown)
         {
-                // Debug.Log($"Clicked at {pointerLocation}");
+            // Debug.Log($"Clicked at {pointerLocation}");
 
-                var ped = new PointerEventData(null)
-                {
-                    position = pointerLocation
-                };
-                raycastResults.Clear();
-                grc.Raycast(ped, raycastResults);
+            var ped = new PointerEventData(null)
+            {
+                position = pointerLocation
+            };
+            raycastResults.Clear();
+            grc.Raycast(ped, raycastResults);
 
-                foreach (var hit in raycastResults)
+            foreach (var hit in raycastResults)
+            {
+                if (hit.gameObject.TryGetComponent(out EntityReferenceHolder erh) &&
+                    SlimeGroup.Includes(erh.EGID.groupID))
                 {
-                    if (hit.gameObject.TryGetComponent(out EntityReferenceHolder erh) &&
-                        SlimeGroup.Includes(erh.EGID.groupID))
+                    // Debug.Log($"Hit {hit.gameObject}", hit.gameObject);
+                    if (entitiesDB.TryQueryEntitiesAndIndex<RectPosition>(erh.EGID, out var i, out var positions))
                     {
-                        // Debug.Log($"Hit {hit.gameObject}", hit.gameObject);
-                        if (entitiesDB.TryQueryEntitiesAndIndex<Position>(erh.EGID, out var i, out var positions))
-                        {
-                            GetDraggingFilter().Add(erh.EGID, i);
-                        }
-                        break;
+                        GetDraggingFilter().Add(erh.EGID, i);
                     }
+                    break;
                 }
+            }
         }
 
         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRt, pointerLocation, canvas.worldCamera, out var worldPosition))
         {
+            var canvasPosition = worldPosition / canvasRt.localScale.x;
             GetDraggingFilter().RunOnFilteredComponents(entitiesDB,
-                (ref Position p) =>
+                (ref RectPosition p) =>
                 {
-                    p.Value = worldPosition;
+                    p.Value = canvasPosition;
                 });
         }
 
@@ -91,6 +92,24 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
             // Debug.Log($"Released at {pointerLocation}");
             var draggingFilter = GetDraggingFilter();
 
+            draggingFilter.RunOnFilteredComponents(entitiesDB,
+                (ref RectPosition p) =>
+                {
+                    var position = p.Value;
+                    Debug.Log($"Slime dropped at {position}");
+                    entitiesDB.QueryEntities<RectPosition, RectBoundary, GameObjectReference>(PenGroupTag.Groups)
+                        .Each((ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
+                        {
+                            if (RectUtils.CreateCenteredRect(pp.Value, new(pb.Width, pb.Height)).Contains(position))
+                            {
+                                var penGo = gameObjectResourceManager[gor.Id];
+                                if (penGo != null)
+                                {
+                                    Debug.Log($"Slime dropped in {penGo}");
+                                }
+                            }
+                        });
+                });
 
             draggingFilter.Clear();
         }
@@ -98,6 +117,6 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
 
     private EntityFilterCollection GetDraggingFilter()
     {
-        return entitiesDB.GetFilters().GetOrCreatePersistentFilter<Position>(draggingEntityFilter);
+        return entitiesDB.GetFilters().GetOrCreatePersistentFilter<RectPosition>(draggingEntityFilter);
     }
 }

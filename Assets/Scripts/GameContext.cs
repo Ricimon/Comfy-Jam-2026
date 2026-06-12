@@ -5,16 +5,18 @@ public class GameContext
 {
     public static World World;
     public static GameObjectResourceManager GameObjectResourceManager;
+    public static RectTransformResourceManager RectTransformResourceManager;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
         World = new World();
-        GameObjectResourceManager = new GameObjectResourceManager();
+        GameObjectResourceManager = new ();
+        RectTransformResourceManager = new();
 
         // Systems
         World.AddSystem(new UpdateDeltaTimeSystem());
-        World.AddSystem(new PositionSystem(GameObjectResourceManager));
+        World.AddSystem(new RectPositionSystem(RectTransformResourceManager));
         World.AddSystem(new InputSystem(GameObjectResourceManager));
         World.AddSystem(new SlimeSpawnerSystem());
     }

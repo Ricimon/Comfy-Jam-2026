@@ -3,7 +3,7 @@ using Svelto.ECS;
 public class PenEntityDescriptor : GenericEntityDescriptor<
     GameObjectReference,
     RectBoundary,
-    Position>
+    RectPosition>
 { }
 
 public class SortingPenEntityDescriptor : ExtendibleEntityDescriptor<PenEntityDescriptor>
