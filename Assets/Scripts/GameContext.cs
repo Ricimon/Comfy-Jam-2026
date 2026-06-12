@@ -17,5 +17,6 @@ public class GameContext
         World.AddSystem(new PositionSystem(GameObjectResourceManager));
         World.AddSystem(new InputSystem(GameObjectResourceManager));
         World.AddSystem(new SlimeSpawnerSystem());
+        World.AddSystem(new SlimeWanderSystem());
     }
 }

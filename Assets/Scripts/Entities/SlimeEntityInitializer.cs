@@ -17,6 +17,11 @@ public class SlimeEntityInitializer : MonoBehaviour
             Value = transform.position,
         });
 
+        entity.Init(new SlimeBrain
+        {
+            MovementState = MovementState.Wander
+        });
+
         if (TryGetComponent(out RectTransform rt))
         {
             entity.Init(new RectBoundary
