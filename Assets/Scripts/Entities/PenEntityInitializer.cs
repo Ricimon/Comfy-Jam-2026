@@ -22,7 +22,7 @@ public class PenEntityInitializer : MonoBehaviour
         }
         else
         {
-            entity = GameContext.World.Entity<PenEntityDescriptor>(PenGroupTag.BuildGroup);
+            entity = GameContext.World.Entity<PenEntityDescriptor>(MainPenGroup.BuildGroup);
         }
 
         entity.Init(new GameObjectReference

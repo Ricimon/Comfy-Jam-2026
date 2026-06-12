@@ -96,16 +96,23 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                 (ref RectPosition p) =>
                 {
                     var position = p.Value;
-                    Debug.Log($"Slime dropped at {position}");
+                    // Debug.Log($"Slime dropped at {position}");
                     entitiesDB.QueryEntities<RectPosition, RectBoundary, GameObjectReference>(PenGroupTag.Groups)
-                        .Each((ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
+                        .Each((uint id, ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
                         {
                             if (RectUtils.CreateCenteredRect(pp.Value, new(pb.Width, pb.Height)).Contains(position))
                             {
                                 var penGo = gameObjectResourceManager[gor.Id];
                                 if (penGo != null)
                                 {
-                                    Debug.Log($"Slime dropped in {penGo}");
+                                    if (entitiesDB.TryGetEntity<SortingPen>(id, SortingPenGroup.BuildGroup, out var sortingPen))
+                                    {
+                                        Debug.Log($"Slime dropped in {penGo}. Sorting pen type is {sortingPen.Type}");
+                                    }
+                                    else
+                                    {
+                                        Debug.Log($"Slime dropped in {penGo}");
+                                    }
                                 }
                             }
                         });
