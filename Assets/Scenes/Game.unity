@@ -716,6 +716,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1636171339 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 655849602554817096, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
+  m_PrefabInstance: {fileID: 1969380317563586894}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1699884466
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,6 +955,18 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2598874823335427924, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
   m_PrefabInstance: {fileID: 1969380317563586894}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1857767678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636171339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c2d0b2656ce87741888e73d261efd8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeEntityInitializer
 --- !u!1 &2025911345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1209,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 655849602554817096, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1857767678}
   m_SourcePrefab: {fileID: 100100000, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

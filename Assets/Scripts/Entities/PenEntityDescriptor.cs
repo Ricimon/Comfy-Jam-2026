@@ -15,5 +15,7 @@ public class SortingPenEntityDescriptor : ExtendibleEntityDescriptor<PenEntityDe
 }
 
 public class PenGroupTag : GroupTag<PenGroupTag> { }
+public class MainPenGroupTag : GroupTag<MainPenGroupTag> { }
+public class MainPenGroup : GroupCompound<PenGroupTag, MainPenGroupTag> { }
 public class SortingPenGroupTag : GroupTag<SortingPenGroupTag> { }
 public class SortingPenGroup : GroupCompound<PenGroupTag, SortingPenGroupTag> { }

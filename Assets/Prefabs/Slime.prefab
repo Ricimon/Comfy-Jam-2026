@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4432535550610945099}
   - component: {fileID: 7547712067962419710}
   - component: {fileID: 4957009165701474220}
-  - component: {fileID: 4304421987895453117}
   m_Layer: 5
   m_Name: Slime
   m_TagString: Untagged
@@ -89,15 +88,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4ba355d3d852f4c8460cc5358cd975, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityReferenceHolder
---- !u!114 &4304421987895453117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 655849602554817096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c2d0b2656ce87741888e73d261efd8c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeEntityInitializer

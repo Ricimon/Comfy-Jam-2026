@@ -55,4 +55,20 @@ public static class ECSUtils
             }
         }
     }
+
+    public delegate void QueryIndexCallback<T1, T2, T3>(uint i, ref T1 t1, ref T2 t2, ref T3 t3);
+
+    public static void Each<T1, T2, T3>(this GroupsEnumerable<T1, T2, T3> entities, QueryIndexCallback<T1, T2, T3> callback)
+        where T1 : unmanaged, IEntityComponent
+        where T2 : unmanaged, IEntityComponent
+        where T3 : unmanaged, IEntityComponent
+    {
+        foreach(var ((t1, t2, t3, id, count), _) in entities)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                callback?.Invoke(id[i], ref t1[i], ref t2[i], ref t3[i]);
+            }
+        }
+    }
 }
