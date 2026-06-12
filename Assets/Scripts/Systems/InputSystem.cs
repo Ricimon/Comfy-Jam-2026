@@ -51,10 +51,8 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
         var pointerDown = clickAction.ReadValue<float>() != 0;
         var pointerLocation = pointAction.ReadValue<Vector2>();
 
-        if (clickAction.WasPerformedThisFrame())
+        if (clickAction.WasPerformedThisFrame() && pointerDown)
         {
-            if (pointerDown)
-            {
                 // Debug.Log($"Clicked at {pointerLocation}");
 
                 var ped = new PointerEventData(null)
@@ -77,25 +75,24 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         break;
                     }
                 }
-            }
-            else
-            {
-                // Debug.Log($"Released at {pointerLocation}");
-
-                GetDraggingFilter().Clear();
-            }
         }
 
-        if (pointerDown)
+        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRt, pointerLocation, canvas.worldCamera, out var worldPosition))
         {
-            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRt, pointerLocation, canvas.worldCamera, out var worldPosition))
-            {
-                GetDraggingFilter().RunOnFilteredComponents(entitiesDB,
-                    (ref Position p) =>
-                    {
-                        p.Value = worldPosition;
-                    });
-            }
+            GetDraggingFilter().RunOnFilteredComponents(entitiesDB,
+                (ref Position p) =>
+                {
+                    p.Value = worldPosition;
+                });
+        }
+
+        if (clickAction.WasPerformedThisFrame() && !pointerDown)
+        {
+            // Debug.Log($"Released at {pointerLocation}");
+            var draggingFilter = GetDraggingFilter();
+
+
+            draggingFilter.Clear();
         }
     }
 

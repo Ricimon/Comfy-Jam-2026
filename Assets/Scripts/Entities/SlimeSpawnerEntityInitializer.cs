@@ -12,7 +12,7 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
         entity.Init(new SlimeSpawner
         {
             SlimePrefabId = id,
-            TimeUntilSpawn = 1.0f,
+            TimeUntilSpawn = float.PositiveInfinity,
             SpawnInterval = 1.0f,
         });
     }
