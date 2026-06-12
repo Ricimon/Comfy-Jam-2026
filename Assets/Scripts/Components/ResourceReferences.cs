@@ -5,3 +5,8 @@ public struct GameObjectReference : IEntityComponent
 {
     public ValueIndex Id;
 }
+
+public struct RectTransformReference : IEntityComponent
+{
+    public ValueIndex Id;
+}

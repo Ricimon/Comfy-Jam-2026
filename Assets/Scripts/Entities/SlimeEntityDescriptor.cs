@@ -2,8 +2,9 @@ using Svelto.ECS;
 
 public class SlimeEntityDescriptor : GenericEntityDescriptor<
     GameObjectReference,
-    Position,
     SlimeBrain,
+    RectTransformReference,
+    RectPosition,
     RectBoundary>
 { }
 
