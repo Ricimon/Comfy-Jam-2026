@@ -5,5 +5,5 @@ using Svelto.ECS;
 public struct SlimeBrain : IEntityComponent
 {
     public MovementState MovementState;
-    public SortingPenType SortingPen;
+    public uint penId;
 }

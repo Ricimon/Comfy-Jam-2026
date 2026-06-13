@@ -72,6 +72,12 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                     {
                         GetDraggingFilter().Add(erh.EGID, i);
                     }
+
+                    if (entitiesDB.TryQueryEntitiesAndIndex<SlimeBrain>(erh.EGID, out var slimeIdx, out var brains))
+                    {
+                        brains[slimeIdx].MovementState = MovementState.Grabbed;
+                    }
+
                     break;
                 }
             }
@@ -93,10 +99,11 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
             var draggingFilter = GetDraggingFilter();
 
             draggingFilter.RunOnFilteredComponents(entitiesDB,
-                (ref RectPosition p) =>
+                (ref RectPosition p, ref SlimeBrain brain, ref Direction direction) =>
                 {
                     var position = p.Value;
-                    // Debug.Log($"Slime dropped at {position}");
+                    uint newPenId = default;
+
                     entitiesDB.QueryEntities<RectPosition, RectBoundary, GameObjectReference>(PenGroupTag.Groups)
                         .Each((uint id, ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
                         {
@@ -113,9 +120,16 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                     {
                                         Debug.Log($"Slime dropped in {penGo}");
                                     }
+                 
                                 }
+                                newPenId = id;
                             }
                         });
+                    
+                    brain.MovementState = MovementState.Wander;
+                    direction.Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
+                    if (newPenId != default)
+                        brain.penId = newPenId;
                 });
 
             draggingFilter.Clear();

@@ -5,7 +5,8 @@ public class SlimeEntityDescriptor : GenericEntityDescriptor<
     SlimeBrain,
     RectTransformReference,
     RectPosition,
-    RectBoundary>
+    RectBoundary,
+    Direction>
 { }
 
 public class SlimeGroup : GroupTag<SlimeGroup> { }
