@@ -5,46 +5,11 @@ public class SlimeEntityInitializer : MonoBehaviour
     private void Start()
     {
         var goId = GameContext.GameObjectResourceManager.Add(gameObject);
-        var entity = GameContext.World.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
+        var entity = SlimeSpawnerSystem.SpawnSlime(GameContext.World);
 
         entity.Init(new GameObjectReference
         {
             Id = goId,
         });
-
-        entity.Init(new SlimeBrain
-        {
-            MovementState = MovementState.Wander,
-        });
-
-        entity.Init(new Direction
-        {
-            Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized
-        });
-
-        if (TryGetComponent(out RectTransform rt))
-        {
-            var rtId = GameContext.RectTransformResourceManager.Add(rt);
-            entity.Init(new RectTransformReference
-            {
-                Id = rtId,
-            });
-
-            entity.Init(new RectPosition
-            {
-                Value = rt.anchoredPosition,
-            });
-
-            entity.Init(new RectBoundary
-            {
-                Width = rt.sizeDelta.x,
-                Height = rt.sizeDelta.y,
-            });
-        }
-
-        if (TryGetComponent(out EntityReferenceHolder holder))
-        {
-            holder.EGID = entity.EGID;
-        }
     }
 }

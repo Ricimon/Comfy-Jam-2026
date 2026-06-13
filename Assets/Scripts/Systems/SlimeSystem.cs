@@ -1,5 +1,6 @@
 using DBC.Common;
 using ECS;
+using Svelto.DataStructures.Experimental;
 using Svelto.ECS;
 using UnityEngine;
 
@@ -30,7 +31,6 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
             {
                 count++;
             });
-        Debug.Log($"Found {count} gor components");
     }
 
     public void Add((uint start, uint end) rangeOfEntities, in EntityCollection<GameObjectReference> entities, ExclusiveGroupStruct groupID)
@@ -40,35 +40,58 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
         var (gors, entityIds, _) = entities;
         for (var i = rangeOfEntities.start; i < rangeOfEntities.end; i++)
         {
+            var id = entityIds[i];
             ref var gor = ref gors[i];
+
+            GameObject go;
+            RectTransform rt;
+            ValueIndex rtId;
 
             try
             {
-                _ = gameObjectResourceManager[gor.Id];
+                go = gameObjectResourceManager[gor.Id];
+                rt = go.GetComponent<RectTransform>();
+                rtId = GameContext.RectTransformResourceManager.Add(rt);
             }
             catch (PreconditionException)
             {
                 // Create GameObject
-                if (!entitiesDB.TryGetSingletonComponent<SlimeSpawner>(SlimeSpawnerGroup.Group, out var slimeSpawner))
+                if (!entitiesDB.TryGetSingletonComponent(SlimeSpawnerGroup.Group, out SlimeSpawner slimeSpawner))
                 {
                     return;
                 }
-                if (!entitiesDB.TryGetSingletonComponent<GameObjectReference>(CanvasGroup.Group, out var canvasGor))
+                if (!entitiesDB.TryGetSingletonComponent(CanvasGroup.Group, out GameObjectReference canvasGor))
                 {
                     return;
                 }
                 var prefab = gameObjectResourceManager[slimeSpawner.SlimePrefabId];
                 var parent = gameObjectResourceManager[canvasGor.Id];
-                var go = Object.Instantiate(prefab, parent.transform);
-                var goId = gameObjectResourceManager.Add(go);
-                var rtId = rectTransformResourceManager.Add(go.GetComponent<RectTransform>());
-                gor.Id = goId;
-                if (entitiesDB.TryGetEntity<RectTransformReference>(i, groupID, out var rtr))
-                {
-                    Debug.Log("Assign rtr");
-                    rtr.Id = rtId;
-                }
+
+                go = Object.Instantiate(prefab, parent.transform);
+                gor.Id = gameObjectResourceManager.Add(go);
+
+                rt = go.GetComponent<RectTransform>();
+                rtId = rectTransformResourceManager.Add(rt);
             }
+
+            entitiesDB.TryGetComponent(id, groupID,
+                (ref RectTransformReference rtr) =>
+                {
+                    rtr.Id = rtId;
+                });
+            entitiesDB.TryGetComponent(id, groupID,
+                (ref RectPosition rp) =>
+                {
+                    rp.Value = rt.anchoredPosition;
+                });
+            entitiesDB.TryGetComponent(id, groupID,
+                (ref RectBoundary rb) =>
+                {
+                    rb.Width = rt.sizeDelta.x;
+                    rb.Height = rt.sizeDelta.y;
+                });
+
+            go.GetComponent<EntityReferenceHolder>().EGID = new(entityIds[i], groupID);
         }
     }
 }

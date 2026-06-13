@@ -1,44 +1,26 @@
 using ECS;
 using Svelto.ECS;
+using UnityEngine;
 
 public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
 {
     public EntitiesDB entitiesDB { get; set; }
 
-    public static void SpawnSlime(World world)
+    public static EntityInitializer SpawnSlime(World world)
     {
         var entity = world.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
-        entity.Init(new RectTransformReference());
 
-        // entity.Init(new GameObjectReference
-        // {
-        //     Id = goId,
-        // });
+        entity.Init(new SlimeBrain
+        {
+            MovementState = MovementState.Wander,
+        });
 
-        // if (TryGetComponent(out RectTransform rt))
-        // {
-        //     var rtId = GameContext.RectTransformResourceManager.Add(rt);
-        //     entity.Init(new RectTransformReference
-        //     {
-        //         Id = rtId,
-        //     });
+        entity.Init(new Direction
+        {
+            Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized
+        });
 
-        //     entity.Init(new RectPosition
-        //     {
-        //         Value = rt.anchoredPosition,
-        //     });
-
-        //     entity.Init(new RectBoundary
-        //     {
-        //         Width = rt.sizeDelta.x,
-        //         Height = rt.sizeDelta.y,
-        //     });
-        // }
-
-        // if (TryGetComponent(out EntityReferenceHolder holder))
-        // {
-        //     holder.EGID = entity.EGID;
-        // }
+        return entity;
     }
 
     public void Ready()
