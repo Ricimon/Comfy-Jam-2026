@@ -12,6 +12,16 @@ public class SlimeEntityInitializer : MonoBehaviour
             Id = goId,
         });
 
+        entity.Init(new SlimeBrain
+        {
+            MovementState = MovementState.Wander,
+        });
+
+        entity.Init(new Direction
+        {
+            Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized
+        });
+
         if (TryGetComponent(out RectTransform rt))
         {
             var rtId = GameContext.RectTransformResourceManager.Add(rt);
