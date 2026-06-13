@@ -17,6 +17,21 @@ public static class ECSUtils
         }
     }
 
+    public static void RunOnFilteredComponents<T1, T2>(this EntityFilterCollection filterCollection, EntitiesDB entitiesDB, ActionRef<T1, T2> action) 
+        where T1 : unmanaged, IEntityComponent
+        where T2 : unmanaged, IEntityComponent
+    {
+        foreach(var (fis, group) in filterCollection)
+        {
+            var (t1, t2, _) = entitiesDB.QueryEntities<T1, T2>(group);
+            for (var i = 0; i < fis.count; i++)
+            {
+                var fi = fis[i];
+                action?.Invoke(ref t1[fi], ref t2[fi]);
+            }
+        }
+    }
+
     public static void Each<T>(this GroupsEnumerable<T> entities, ActionRef<T> action)
         where T : unmanaged, IEntityComponent
     {
