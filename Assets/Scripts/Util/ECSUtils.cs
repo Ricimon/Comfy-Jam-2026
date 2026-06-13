@@ -33,18 +33,35 @@ public static class ECSUtils
         }
     }
 
-    public static void RunOnFilteredComponents<T1, T2, T3>(this EntityFilterCollection filterCollection, EntitiesDB entitiesDB, ActionRef<T1, T2,T3> action)
+    public static void RunOnFilteredComponents<T1, T2, T3>(this EntityFilterCollection filterCollection, EntitiesDB entitiesDB, ActionRef<T1, T2, T3> action)
         where T1 : unmanaged, IEntityComponent
         where T2 : unmanaged, IEntityComponent
         where T3 : unmanaged, IEntityComponent
     {
         foreach (var (fis, group) in filterCollection)
         {
-            var (t1, t2, t3,_) = entitiesDB.QueryEntities<T1, T2, T3>(group);
+            var (t1, t2, t3, _) = entitiesDB.QueryEntities<T1, T2, T3>(group);
             for (var i = 0; i < fis.count; i++)
             {
                 var fi = fis[i];
                 action?.Invoke(ref t1[fi], ref t2[fi], ref t3[fi]);
+            }
+        }
+    }
+
+    public static void RunOnFilteredComponents<T1, T2, T3, T4>(this EntityFilterCollection filterCollection, EntitiesDB entitiesDB, ActionRef<T1, T2, T3, T4> action)
+        where T1 : unmanaged, IEntityComponent
+        where T2 : unmanaged, IEntityComponent
+        where T3 : unmanaged, IEntityComponent
+        where T4 : unmanaged, IEntityComponent
+    {
+        foreach (var (fis, group) in filterCollection)
+        {
+            var (t1, t2, t3, t4, _) = entitiesDB.QueryEntities<T1, T2, T3, T4>(group);
+            for (var i = 0; i < fis.count; i++)
+            {
+                var fi = fis[i];
+                action?.Invoke(ref t1[fi], ref t2[fi], ref t3[fi], ref t4[fi]);
             }
         }
     }
@@ -66,6 +83,17 @@ public static class ECSUtils
         where T : unmanaged, IEntityComponent
     {
         if (entitiesDB.TryQueryEntitiesAndIndex(id, group, out var i, out NB<T> t))
+        {
+            action?.Invoke(ref t[i]);
+            return true;
+        }
+        return false;
+    }
+
+    public static bool TryGetComponent<T>(this EntitiesDB entitiesDB, EGID egid, ActionRef<T> action)
+        where T : unmanaged, IEntityComponent
+    {
+        if (entitiesDB.TryQueryEntitiesAndIndex(egid, out var i, out NB<T> t))
         {
             action?.Invoke(ref t[i]);
             return true;

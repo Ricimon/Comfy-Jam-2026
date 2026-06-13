@@ -10,6 +10,11 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
     {
         var entity = world.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
 
+        entity.Init(new Slime
+        {
+            CanPickUp = true,
+        });
+
         entity.Init(new SlimeBrain
         {
             MovementState = MovementState.Wander,
