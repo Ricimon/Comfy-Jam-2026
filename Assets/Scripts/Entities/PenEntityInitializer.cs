@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class PenEntityInitializer : MonoBehaviour
 {
-    public SortingPenType sortingPenType;
+    public SlimeColor sortingPenType;
 
     private void Start()
     {
         var id = GameContext.GameObjectResourceManager.Add(gameObject);
 
-        var isSortingPen = sortingPenType != SortingPenType.None;
+        var isSortingPen = sortingPenType != SlimeColor.None;
 
         EntityInitializer entity;
         if (isSortingPen)

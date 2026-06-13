@@ -64,7 +64,14 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                 {
                     return;
                 }
-                var prefab = gameObjectResourceManager[slimeSpawner.SlimePrefabId];
+
+                var slime = entitiesDB.QueryEntity<Slime>(id, groupID);
+                GameObject prefab = slime.SlimeColor switch
+                {
+                    SlimeColor.Red => gameObjectResourceManager[slimeSpawner.SlimeRedPrefabId],
+                    SlimeColor.Blue => gameObjectResourceManager[slimeSpawner.SlimeBluePrefabId],
+                    _ => gameObjectResourceManager[slimeSpawner.SlimePrefabId],
+                };
                 var parent = gameObjectResourceManager[canvasGor.Id];
 
                 go = Object.Instantiate(prefab, parent.transform);

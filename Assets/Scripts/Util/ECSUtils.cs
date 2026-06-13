@@ -79,6 +79,12 @@ public static class ECSUtils
         return true;
     }
 
+    public static T GetComponent<T>(this EntitiesDB entitiesDB, uint id, ExclusiveGroupStruct group)
+        where T : unmanaged, IEntityComponent
+    {
+        return entitiesDB.QueryEntity<T>(id, group);
+    }
+
     public static bool TryGetComponent<T>(this EntitiesDB entitiesDB, uint id, ExclusiveGroupStruct group, ActionRef<T> action)
         where T : unmanaged, IEntityComponent
     {

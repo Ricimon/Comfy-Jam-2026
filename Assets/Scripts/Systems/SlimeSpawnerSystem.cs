@@ -6,13 +6,14 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
 {
     public EntitiesDB entitiesDB { get; set; }
 
-    public static EntityInitializer SpawnSlime(World world)
+    public static EntityInitializer SpawnSlime(World world, SlimeColor slimeColor)
     {
         var entity = world.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
 
         entity.Init(new Slime
         {
             CanPickUp = true,
+            SlimeColor = slimeColor,
         });
 
         entity.Init(new SlimeBrain
