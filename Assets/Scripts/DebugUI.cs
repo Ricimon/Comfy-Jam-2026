@@ -23,7 +23,14 @@ public class DebugUI : MonoBehaviour
         {
             SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Blue);
         }
+        GUILayout.FlexibleSpace();
+
+        GUILayout.Label($"SCORE: {GameStatSystem.Score}");
+        GUILayout.Label($"Lives: {GameStatSystem.Lives}");
         GUILayout.EndHorizontal();
+
+
+        
 
         GUI.skin = null;
     }

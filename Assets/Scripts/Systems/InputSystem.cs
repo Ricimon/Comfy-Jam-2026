@@ -113,6 +113,8 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                     var position = p.Value;
                     uint newPenId = default;
                     bool isSortingPen = false;
+                    bool isMatchingColor = false;
+                    SlimeColor penColor = SlimeColor.None;
 
                     entitiesDB.QueryEntities<RectPosition, RectBoundary, GameObjectReference>(PenGroupTag.Groups)
                         .Each((uint id, ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
@@ -126,6 +128,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                     {
                                         Debug.Log($"Slime dropped in {penGo}. Sorting pen type is {sortingPen.Type}");
                                         isSortingPen = true;
+                                        penColor = sortingPen.Type;
                                     }
                                     else
                                     {
@@ -141,6 +144,18 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                     brain.MovementState = MovementState.Wander;
                     direction.Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
                     slime.CanPickUp = !isSortingPen;
+                    isMatchingColor = slime.SlimeColor == penColor;
+                    if (isMatchingColor)
+                    {
+                        var (score, count) = entitiesDB.QueryEntities<Score>(GameStatTag.Group);
+                        score[0].Value++;
+                    }
+                    else if(penColor != SlimeColor.None && !isMatchingColor)
+                    {
+                        var (lives, count) = entitiesDB.QueryEntities<Lives>(GameStatTag.Group);
+                        lives[0].Value--;
+                    }
+
                     if (newPenId != default)
                         brain.penId = newPenId;
                 });

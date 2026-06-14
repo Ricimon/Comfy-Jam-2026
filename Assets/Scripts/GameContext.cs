@@ -14,8 +14,21 @@ public class GameContext
         GameObjectResourceManager = new ();
         RectTransformResourceManager = new();
 
+        //Entities
+        var gameStatEntity = World.Entity<GameStatDescriptor>(GameStatTag.Group);
+        gameStatEntity.Init(new Score
+        {
+            Value = 0
+        });
+        gameStatEntity.Init(new Lives
+        {
+            Value = 3
+        });
+
+
         // Systems
         World.AddSystem(new UpdateDeltaTimeSystem());
+        World.AddSystem(new GameStatSystem());
         World.AddSystem(new RectPositionSystem(RectTransformResourceManager));
         World.AddSystem(new InputSystem(GameObjectResourceManager));
         World.AddSystem(new SlimeSpawnerSystem());
