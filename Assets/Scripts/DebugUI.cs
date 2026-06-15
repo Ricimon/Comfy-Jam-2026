@@ -29,6 +29,19 @@ public class DebugUI : MonoBehaviour
         GUILayout.Label($"Lives: {GameStatSystem.Lives}");
         GUILayout.EndHorizontal();
 
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Disguised:");
+        if (GUILayout.Button("Spawn Red Slime"))
+        {
+            SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Red, DisguiseType.Default);
+        }
+        GUILayout.Space(10);
+        if (GUILayout.Button("Spawn Blue Slime"))
+        {
+            SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Blue, DisguiseType.Default);
+        }
+        GUILayout.EndHorizontal();
+
 
         
 

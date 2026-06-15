@@ -7,10 +7,22 @@ namespace ECS
 {
     public class World : IDisposable
     {
+        private class DbSystem : ISystem, IQueryingEntitiesEngine
+        {
+            public EntitiesDB entitiesDB { get; set; }
+
+            public void Ready() { }
+
+            public void Update() { }
+        }
+
+        public EntitiesDB EntitiesDB => dbSystem.entitiesDB;
+
         private readonly EnginesRoot enginesRoot;
         private readonly EntitiesSubmissionScheduler entitiesSubmissionScheduler;
         private readonly IEntityFactory entityFactory;
         private readonly IEntityFunctions entityFunctions;
+        private readonly DbSystem dbSystem = new();
         private readonly List<ISystem> systems = new();
         private readonly IdPool idPool = new();
 
@@ -21,13 +33,15 @@ namespace ECS
 
             entityFactory = enginesRoot.GenerateEntityFactory();
             entityFunctions = enginesRoot.GenerateEntityFunctions();
+
+            AddSystem(dbSystem);
         }
 
         public bool IsValid() => enginesRoot.IsValid();
 
         public void Dispose()
         {
-            foreach(var system in systems)
+            foreach (var system in systems)
             {
                 if (system is IDisposable d)
                 {
@@ -55,10 +69,20 @@ namespace ECS
             entityFunctions.RemoveEntity<T>(egid);
         }
 
+        public void RemoveEntity<T>(uint id, ExclusiveGroupStruct groupID) where T : IEntityDescriptor, new()
+        {
+            entityFunctions.RemoveEntity<T>(id, groupID);
+        }
+
+        public void RemoveEntitiesFromGroup(ExclusiveGroupStruct group)
+        {
+            entityFunctions.RemoveEntitiesFromGroup(group);
+        }
+
         public void Progress()
         {
             entitiesSubmissionScheduler.SubmitEntities();
-            foreach(var system in systems)
+            foreach (var system in systems)
             {
                 system.Update();
             }

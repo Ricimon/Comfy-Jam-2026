@@ -15,3 +15,21 @@ public class GenericEntityDescriptorAndGroup<T> : NamedExclusiveGroup<T>, IEntit
         };
     }
 }
+
+public class GenericEntityDescriptorAndGroup<T1, T2> : NamedExclusiveGroup<T1>, IEntityDescriptor
+    where T1 : struct, IEntityComponent
+    where T2 : struct, IEntityComponent
+{
+    private static readonly IComponentBuilder[] _componentBuilders;
+
+    public IComponentBuilder[] componentsToBuild => _componentBuilders;
+
+    static GenericEntityDescriptorAndGroup()
+    {
+        _componentBuilders = new IComponentBuilder[]
+        {
+            new ComponentBuilder<T1>(),
+            new ComponentBuilder<T2>(),
+        };
+    }
+}

@@ -6,27 +6,40 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
 {
     public EntitiesDB entitiesDB { get; set; }
 
-    public static EntityInitializer SpawnSlime(World world, SlimeColor slimeColor)
+    public static EntityInitializer SpawnSlime(World world, SlimeColor slimeColor, DisguiseType disguise = DisguiseType.None)
     {
-        var entity = world.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
+        var slimeEntity = world.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
 
-        entity.Init(new Slime
+        EntityInitializer disguiseEntity = default;
+        if (disguise != DisguiseType.None)
+        {
+            disguiseEntity = world.Entity<DisguiseEntity>(DisguiseEntity.Group);
+
+            disguiseEntity.Init(new Disguise
+            {
+                Type = disguise,
+                SlimeId = slimeEntity.EGID,
+            });
+        }
+
+        slimeEntity.Init(new Slime
         {
             CanPickUp = true,
             SlimeColor = slimeColor,
+            DisguiseId = disguiseEntity.EGID,
         });
 
-        entity.Init(new SlimeBrain
+        slimeEntity.Init(new SlimeBrain
         {
             MovementState = MovementState.Wander,
         });
 
-        entity.Init(new Direction
+        slimeEntity.Init(new Direction
         {
             Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized
         });
 
-        return entity;
+        return slimeEntity;
     }
 
     public void Ready()

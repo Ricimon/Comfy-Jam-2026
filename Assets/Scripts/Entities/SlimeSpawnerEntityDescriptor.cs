@@ -1,7 +1,8 @@
 using Svelto.ECS;
 
 public class SlimeSpawnerEntityDescriptor : GenericEntityDescriptor<
-    SlimeSpawner>
+    SlimeSpawner,
+    GameObjectReference>
 { }
 
 public class SlimeSpawnerGroup : NamedExclusiveGroup<SlimeSpawnerGroup> { }

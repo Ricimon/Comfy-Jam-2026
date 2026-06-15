@@ -11,4 +11,5 @@ public struct Slime : IEntityComponent
 {
     public bool CanPickUp;
     public SlimeColor SlimeColor;
+    public EGID DisguiseId;
 }
