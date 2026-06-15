@@ -147,6 +147,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4629205873331289014}
   - component: {fileID: 7143351092673302447}
+  - component: {fileID: 2431572301682549080}
   m_Layer: 5
   m_Name: GameCanvas
   m_TagString: Untagged
@@ -187,6 +188,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &2431572301682549080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 648068624327218454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 723b6c81269262c4788c75330d69a02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameCanvasView
+  scoreText: {fileID: 5729832886413941272}
+  livesText: {fileID: 5462439664696134996}
 --- !u!1 &1240781270762188795
 GameObject:
   m_ObjectHideFlags: 0
@@ -409,6 +424,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3073957827778482551}
   - component: {fileID: 7160829886173251216}
+  - component: {fileID: 6266881676910085912}
   m_Layer: 5
   m_Name: GameOver
   m_TagString: Untagged
@@ -451,6 +467,20 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &6266881676910085912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2642362793906533607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b652fc77f776247bf0bfedf92bcf24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameOverCanvasView
+  scoreText: {fileID: 7352671445507954036}
+  retryBtn: {fileID: 748482781083210737}
 --- !u!1 &6038742531109353985
 GameObject:
   m_ObjectHideFlags: 0
@@ -460,6 +490,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8501492611296363373}
+  - component: {fileID: 5051370527498588332}
   m_Layer: 5
   m_Name: Main Canvas
   m_TagString: Untagged
@@ -488,6 +519,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5051370527498588332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038742531109353985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 732146ee9ab6d6c41b34efbf0fcab921, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainCanvasView
+  gameOverCanvas: {fileID: 6266881676910085912}
+  gameCanvas: {fileID: 2431572301682549080}
 --- !u!1 &6997450528563706562
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,13 @@ public class GameOverCanvasView : MonoBehaviour
     [SerializeField] private Button retryBtn;
 
 
+    private Action onRetryAction;
+
+    public void Init(Action onRetryAction)
+    {
+        this.onRetryAction = onRetryAction;
+    }
+
     private void Start()
     {
         retryBtn.onClick.AddListener(OnRetryBtnPress);
@@ -15,10 +23,19 @@ public class GameOverCanvasView : MonoBehaviour
 
     public void Show()
     {
-        var (score, count) = GameContext.World.EntitiesDB.QueryEntities<Score>(GameStatTag.Group);
+       GameContext.World.EntitiesDB.QueryEntities<Score>(GameStatTag.Group).Each((ref Score score)=> 
+       {
+           scoreText.text = $"Score: {score.Value}";
+       });
+        gameObject.SetActive(true);
+    }
+    public void Hide()
+    {
+        gameObject.SetActive(false);
     }
     private void OnRetryBtnPress()
     {
-        Debug.Log("GameReset");
+        gameObject.SetActive(false);
+        onRetryAction?.Invoke();
     }
 }

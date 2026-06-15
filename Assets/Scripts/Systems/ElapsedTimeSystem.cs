@@ -18,6 +18,6 @@ public class ElapsedTimeSystem : ISystem, IQueryingEntitiesEngine
             {
                 elapsedTime.ValueSeconds += Time.deltaTime;
             });
-
+        var (score, count) = GameContext.World.EntitiesDB.QueryEntities<Score>(GameStatTag.Group);
     }
 }
