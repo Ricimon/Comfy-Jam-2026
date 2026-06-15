@@ -48,3 +48,23 @@ public class GenericEntityDescriptorAndGroup<T1, T2, T3> : NamedExclusiveGroup<T
         };
     }
 }
+
+public class GenericEntityDescriptorAndGroup<T1, T2, T3, T4> : NamedExclusiveGroup<T1>, IEntityDescriptor
+    where T1 : struct, IEntityComponent
+    where T2 : struct, IEntityComponent
+    where T3 : struct, IEntityComponent
+    where T4 : struct, IEntityComponent
+{
+    private static readonly IComponentBuilder[] _componentBuilders;
+    public IComponentBuilder[] componentsToBuild => _componentBuilders;
+    static GenericEntityDescriptorAndGroup()
+    {
+        _componentBuilders = new IComponentBuilder[]
+        {
+            new ComponentBuilder<T1>(),
+            new ComponentBuilder<T2>(),
+            new ComponentBuilder<T3>(),
+            new ComponentBuilder<T4>(),
+        };
+    }
+}

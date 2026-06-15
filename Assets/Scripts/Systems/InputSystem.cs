@@ -12,6 +12,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
 
     private readonly GameObjectResourceManager gameObjectResourceManager;
     private readonly InputAction clickAction;
+    private readonly InputAction rightClickAction;
     private readonly InputAction pointAction;
     private readonly List<RaycastResult> raycastResults = new();
     private readonly CombinedFilterID draggingEntityFilter = new(0, FilterContextID.GetNewContextID());
@@ -26,6 +27,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
 
         var defaultActions = UnityEngine.InputSystem.InputSystem.actions;
         clickAction = defaultActions.FindAction("Click");
+        rightClickAction = defaultActions.FindAction("RightClick");
         pointAction = defaultActions.FindAction("Point");
     }
 
@@ -48,8 +50,19 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
             }
         }
 
-        var pointerDown = clickAction.ReadValue<float>() != 0;
         var pointerLocation = pointAction.ReadValue<Vector2>();
+        UpdateLeftClick(pointerLocation);
+        UpdateRightClick(pointerLocation);
+    }
+
+    private EntityFilterCollection GetDraggingFilter()
+    {
+        return entitiesDB.GetFilters().GetOrCreatePersistentFilter<RectPosition>(draggingEntityFilter);
+    }
+
+    private void UpdateLeftClick(Vector2 pointerLocation)
+    {
+        var pointerDown = clickAction.ReadValue<float>() != 0;
 
         if (clickAction.WasPerformedThisFrame() && pointerDown)
         {
@@ -172,8 +185,55 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
         }
     }
 
-    private EntityFilterCollection GetDraggingFilter()
+    private void UpdateRightClick(Vector2 pointerLocation)
     {
-        return entitiesDB.GetFilters().GetOrCreatePersistentFilter<RectPosition>(draggingEntityFilter);
+        var pointerDown = rightClickAction.ReadValue<float>() != 0;
+
+        if (rightClickAction.WasPerformedThisFrame() && pointerDown)
+        {
+            // Debug.Log($"Clicked at {pointerLocation}");
+
+            var ped = new PointerEventData(null)
+            {
+                position = pointerLocation
+            };
+            raycastResults.Clear();
+            grc.Raycast(ped, raycastResults);
+
+            foreach (var hit in raycastResults)
+            {
+                if (hit.gameObject.TryGetComponent(out EntityReferenceHolder erh) &&
+                    erh.EGID.IsValid())
+                {
+                    // Disguise
+                    if (DisguiseEntity.Group == erh.EGID.groupID)
+                    {
+                        if (entitiesDB.TryGetEntity(erh.EGID, out Disguise disguise))
+                        {
+                            if (!disguise.SlimeId.IsValid())
+                            {
+                                continue;
+                            }
+                        }
+
+                        entitiesDB.TryGetComponent(erh.EGID,
+                            (ref Disguise disguise) =>
+                            {
+                                Debug.Log("Removing disguise");
+                                disguise.ShouldRemove = true;
+                            });
+
+                        break;
+                    }
+
+                    // Slime
+                    else if (SlimeGroup.Includes(erh.EGID.groupID))
+                    {
+                        // TODO: Make slime angry
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

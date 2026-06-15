@@ -25,11 +25,18 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 
     public void Update()
     {
-        var count = 0;
-        entitiesDB.QueryEntities<GameObjectReference>(SlimeGroup.Groups)
-            .Each((ref GameObjectReference gor) =>
+        entitiesDB.QueryEntities<GameObjectReference, SlimeBrain>(SlimeGroup.Groups)
+            .Each((ref GameObjectReference gor, ref SlimeBrain slimeBrain) =>
             {
-                count++;
+                var go = gameObjectResourceManager[gor.Id];
+                if (slimeBrain.MovementState == MovementState.Grabbed)
+                {
+                    go.transform.localScale = 1.25f * Vector3.one;
+                }
+                else
+                {
+                    go.transform.localScale = Vector3.one;
+                }
             });
     }
 

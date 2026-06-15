@@ -27,6 +27,8 @@ public class GameContext
 
 
         // Systems
+        World.AddSystem(new GameObjectReferenceSystem(GameObjectResourceManager));
+        World.AddSystem(new RectTransformReferenceSystem(RectTransformResourceManager));
         World.AddSystem(new UpdateDeltaTimeSystem());
         World.AddSystem(new GameStatSystem());
         World.AddSystem(new RectPositionSystem(RectTransformResourceManager));
@@ -34,6 +36,6 @@ public class GameContext
         World.AddSystem(new SlimeSpawnerSystem());
         World.AddSystem(new SlimeSystem(GameObjectResourceManager, RectTransformResourceManager));
         World.AddSystem(new SlimeWanderSystem());
-        World.AddSystem(new DisguiseSystem(World, GameObjectResourceManager));
+        World.AddSystem(new DisguiseSystem(World, GameObjectResourceManager, RectTransformResourceManager));
     }
 }
