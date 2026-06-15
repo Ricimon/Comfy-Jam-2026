@@ -88,6 +88,13 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         brains[slimeIdx].MovementState = MovementState.Grabbed;
                     }
 
+                    entitiesDB.TryGetComponent(erh.EGID,
+                        (ref GameObjectReference slimeGor) =>
+                        {
+                            var slime = gameObjectResourceManager[slimeGor.Id];
+                            slime.transform.SetAsLastSibling();
+                        });
+
                     break;
                 }
             }

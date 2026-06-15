@@ -60,7 +60,7 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                 {
                     return;
                 }
-                if (!entitiesDB.TryGetSingletonComponent(CanvasGroup.Group, out GameObjectReference canvasGor))
+                if (!entitiesDB.TryGetSingletonComponent(CanvasGroup.Group, out GameCanvas gameCanvas))
                 {
                     return;
                 }
@@ -72,9 +72,10 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                     SlimeColor.Blue => gameObjectResourceManager[slimeSpawner.SlimeBluePrefabId],
                     _ => gameObjectResourceManager[slimeSpawner.SlimePrefabId],
                 };
-                var parent = gameObjectResourceManager[canvasGor.Id];
+                var parent = gameObjectResourceManager[gameCanvas.SlimesParentGoId];
 
                 go = Object.Instantiate(prefab, parent.transform);
+                go.transform.SetAsFirstSibling();
                 gor.Id = gameObjectResourceManager.Add(go);
 
                 rt = go.GetComponent<RectTransform>();
