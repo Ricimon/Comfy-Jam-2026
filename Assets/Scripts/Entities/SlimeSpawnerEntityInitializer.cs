@@ -5,6 +5,7 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
     public GameObject slimePrefab;
     public GameObject slimeRedPrefab;
     public GameObject slimeBluePrefab;
+    public SpawnerConfig spawnerConfig;
 
     public void Start()
     {
@@ -18,7 +19,7 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
             SlimePrefabId = id,
             SlimeRedPrefabId = idRed,
             SlimeBluePrefabId = idBlue,
-            TimeUntilSpawn = float.PositiveInfinity,
+            TimeUntilSpawn = 1,
             SpawnInterval = 1.0f,
         });
     }

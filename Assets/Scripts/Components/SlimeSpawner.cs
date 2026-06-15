@@ -1,5 +1,6 @@
 using Svelto.DataStructures.Experimental;
 using Svelto.ECS;
+using UnityEngine;
 
 public struct SlimeSpawner : IEntityComponent
 {

@@ -43,9 +43,10 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
         {
             ref var spawner = ref c1[i];
             spawner.TimeUntilSpawn -= deltaTime;
+
             if (spawner.TimeUntilSpawn <= 0)
             {
-                UnityEngine.Debug.Log("Spawn!");
+                SlimeSpawnerSystem.SpawnSlime(GameContext.World, (SlimeColor)Random.Range(1,3));
                 spawner.TimeUntilSpawn += spawner.SpawnInterval;
             }
         }

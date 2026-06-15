@@ -1275,6 +1275,7 @@ MonoBehaviour:
   slimePrefab: {fileID: 655849602554817096, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
   slimeRedPrefab: {fileID: 2664455032243645808, guid: 522ee7cc6f5b98d43911badad9338595, type: 3}
   slimeBluePrefab: {fileID: 7596842489799032846, guid: 10d97f6e9c8fe7143afbe4307dd0a75d, type: 3}
+  spawnerConfig: {fileID: 11400000, guid: 54b73aeb765b16a4c8b56b95abc3d125, type: 2}
 --- !u!4 &2144800148
 Transform:
   m_ObjectHideFlags: 0
