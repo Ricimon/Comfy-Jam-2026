@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class GameStatDescriptor : GenericEntityDescriptor<
     Score,
-    Lives>
+    Lives,
+    ElapsedTime>
 { }
 
 public class GameStatTag : NamedExclusiveGroup<GameStatTag> { }

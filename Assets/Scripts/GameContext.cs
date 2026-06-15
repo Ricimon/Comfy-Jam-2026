@@ -6,6 +6,7 @@ public class GameContext
     public static World World;
     public static GameObjectResourceManager GameObjectResourceManager;
     public static RectTransformResourceManager RectTransformResourceManager;
+    public static AnimationCurveResourceManager AnimationCurveResourceManager;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
@@ -13,6 +14,7 @@ public class GameContext
         World = new World();
         GameObjectResourceManager = new ();
         RectTransformResourceManager = new();
+        AnimationCurveResourceManager = new();
 
         //Entities
         var gameStatEntity = World.Entity<GameStatDescriptor>(GameStatTag.Group);
@@ -22,18 +24,20 @@ public class GameContext
         });
         gameStatEntity.Init(new Lives
         {
-            Value = 3
+            Value = 4
         });
+        gameStatEntity.Init(new ElapsedTime { ValueSeconds = 0 });
 
 
         // Systems
         World.AddSystem(new GameObjectReferenceSystem(GameObjectResourceManager));
         World.AddSystem(new RectTransformReferenceSystem(RectTransformResourceManager));
         World.AddSystem(new UpdateDeltaTimeSystem());
+        World.AddSystem(new ElapsedTimeSystem());
         World.AddSystem(new GameStatSystem());
         World.AddSystem(new RectPositionSystem(RectTransformResourceManager));
         World.AddSystem(new InputSystem(GameObjectResourceManager));
-        World.AddSystem(new SlimeSpawnerSystem());
+        World.AddSystem(new SlimeSpawnerSystem(AnimationCurveResourceManager));
         World.AddSystem(new SlimeSystem(GameObjectResourceManager, RectTransformResourceManager));
         World.AddSystem(new SlimeWanderSystem());
         World.AddSystem(new DisguiseSystem(World, GameObjectResourceManager, RectTransformResourceManager));
