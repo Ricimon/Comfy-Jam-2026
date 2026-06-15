@@ -83,4 +83,37 @@ public static class ECSQueryEachExtensions
             }
         }
     }
+
+    public static void Each<T>(this EntityCollection<T> entities, ActionRef<T> action)
+        where T : unmanaged, IEntityComponent
+    {
+        var (t1, count) = entities;
+        for (var i = 0; i < count; i++)
+        {
+            action?.Invoke(ref t1[i]);
+        }
+    }
+
+    public static void Each<T1, T2>(this EntityCollection<T1, T2> entities, ActionRef<T1, T2> action)
+        where T1 : unmanaged, IEntityComponent
+        where T2 : unmanaged, IEntityComponent
+    {
+        var (t1, t2, count) = entities;
+        for (var i = 0; i < count; i++)
+        {
+            action?.Invoke(ref t1[i], ref t2[i]);
+        }
+    }
+
+    public static void Each<T1, T2, T3>(this EntityCollection<T1, T2, T3> entities, ActionRef<T1, T2, T3> action)
+        where T1 : unmanaged, IEntityComponent
+        where T2 : unmanaged, IEntityComponent
+        where T3 : unmanaged, IEntityComponent
+    {
+        var (t1, t2, t3, count) = entities;
+        for (var i = 0; i < count; i++)
+        {
+            action?.Invoke(ref t1[i], ref t2[i], ref t3[i]);
+        }
+    }
 }

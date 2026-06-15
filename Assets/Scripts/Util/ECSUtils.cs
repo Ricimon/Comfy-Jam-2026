@@ -66,6 +66,12 @@ public static class ECSUtils
         }
     }
 
+    public static T GetSingletonComponent<T>(this EntitiesDB entitiesDB, ExclusiveGroupStruct groupStructId)
+        where T : unmanaged, IEntityComponent
+    {
+        return entitiesDB.QueryUniqueEntity<T>(groupStructId);
+    }
+
     public static bool TryGetSingletonComponent<T>(this EntitiesDB entitiesDB, ExclusiveGroupStruct groupStructId, out T component)
         where T : unmanaged, IEntityComponent
     {
@@ -83,6 +89,12 @@ public static class ECSUtils
         where T : unmanaged, IEntityComponent
     {
         return entitiesDB.QueryEntity<T>(id, group);
+    }
+
+    public static T GetComponent<T>(this EntitiesDB entitiesDB, EGID egid)
+        where T : unmanaged, IEntityComponent
+    {
+        return entitiesDB.QueryEntity<T>(egid);
     }
 
     public static bool TryGetComponent<T>(this EntitiesDB entitiesDB, uint id, ExclusiveGroupStruct group, ActionRef<T> action)
