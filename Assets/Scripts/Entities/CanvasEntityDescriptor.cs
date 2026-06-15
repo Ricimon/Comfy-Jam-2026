@@ -1,6 +1,7 @@
 using Svelto.ECS;
 
 public class CanvasEntityDescriptor : GenericEntityDescriptor<
+    GameCanvas,
     GameObjectReference>
 { }
 
