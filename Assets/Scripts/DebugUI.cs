@@ -30,13 +30,12 @@ public class DebugUI : MonoBehaviour
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Disguised:");
-        if (GUILayout.Button("Spawn Red Slime"))
+        if (GUILayout.Button("Spawn Disguised Red Slime"))
         {
             SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Red, DisguiseType.Default);
         }
         GUILayout.Space(10);
-        if (GUILayout.Button("Spawn Blue Slime"))
+        if (GUILayout.Button("Spawn Disguised Blue Slime"))
         {
             SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Blue, DisguiseType.Default);
         }
