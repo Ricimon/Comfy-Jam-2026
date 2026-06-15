@@ -11,5 +11,15 @@ public class SlimeEntityInitializer : MonoBehaviour
         {
             Id = goId,
         });
+
+        // entity.Init(new SlimeBrain
+        // {
+        //     MovementState = MovementState.Grabbed,
+        // });
+
+        entity.Init(new Direction
+        {
+            Value = Vector2.zero,
+        });
     }
 }

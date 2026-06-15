@@ -106,4 +106,9 @@ public static class ECSUtils
         }
         return false;
     }
+
+    public static bool IsValid(this EGID egid)
+    {
+        return egid.entityID != 0 && !egid.groupID.isInvalid;
+    }
 }

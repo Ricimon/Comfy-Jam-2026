@@ -9,9 +9,13 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
 
     public void Start()
     {
+        var goId = GameContext.GameObjectResourceManager.Add(gameObject);
         var id = GameContext.GameObjectResourceManager.Add(slimePrefab);
         var idRed = GameContext.GameObjectResourceManager.Add(slimeRedPrefab);
         var idBlue = GameContext.GameObjectResourceManager.Add(slimeBluePrefab);
+
+        GameContext.World.RemoveEntitiesFromGroup(SlimeSpawnerGroup.Group);
+
         var entity = GameContext.World.Entity<SlimeSpawnerEntityDescriptor>(SlimeSpawnerGroup.Group);
 
         entity.Init(new SlimeSpawner
@@ -21,6 +25,11 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
             SlimeBluePrefabId = idBlue,
             TimeUntilSpawn = 1,
             SpawnInterval = 1.0f,
+        });
+
+        entity.Init(new GameObjectReference
+        {
+            Id = goId,
         });
     }
 }

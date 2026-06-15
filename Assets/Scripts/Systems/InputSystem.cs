@@ -65,6 +65,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
             foreach (var hit in raycastResults)
             {
                 if (hit.gameObject.TryGetComponent(out EntityReferenceHolder erh) &&
+                    erh.EGID.IsValid() &&
                     SlimeGroup.Includes(erh.EGID.groupID))
                 {
                     // Debug.Log($"Hit {hit.gameObject}", hit.gameObject);
