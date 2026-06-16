@@ -178,7 +178,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                     }
 
                     if (newPenId != default)
-                        brain.penId = newPenId;
+                        brain.PenId = newPenId;
                 });
 
             draggingFilter.Clear();

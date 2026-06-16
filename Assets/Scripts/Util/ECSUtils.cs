@@ -1,5 +1,4 @@
 using System;
-using Svelto.DataStructures;
 using Svelto.ECS;
 
 public static class ECSUtils
@@ -64,59 +63,6 @@ public static class ECSUtils
                 action?.Invoke(ref t1[fi], ref t2[fi], ref t3[fi], ref t4[fi]);
             }
         }
-    }
-
-    public static T GetSingletonComponent<T>(this EntitiesDB entitiesDB, ExclusiveGroupStruct groupStructId)
-        where T : unmanaged, IEntityComponent
-    {
-        return entitiesDB.QueryUniqueEntity<T>(groupStructId);
-    }
-
-    public static bool TryGetSingletonComponent<T>(this EntitiesDB entitiesDB, ExclusiveGroupStruct groupStructId, out T component)
-        where T : unmanaged, IEntityComponent
-    {
-        var (t, count) = entitiesDB.QueryEntities<T>(groupStructId);
-        if (count == 0)
-        {
-            component = default;
-            return false;
-        }
-        component = t[0];
-        return true;
-    }
-
-    public static T GetComponent<T>(this EntitiesDB entitiesDB, uint id, ExclusiveGroupStruct group)
-        where T : unmanaged, IEntityComponent
-    {
-        return entitiesDB.QueryEntity<T>(id, group);
-    }
-
-    public static T GetComponent<T>(this EntitiesDB entitiesDB, EGID egid)
-        where T : unmanaged, IEntityComponent
-    {
-        return entitiesDB.QueryEntity<T>(egid);
-    }
-
-    public static bool TryGetComponent<T>(this EntitiesDB entitiesDB, uint id, ExclusiveGroupStruct group, ActionRef<T> action)
-        where T : unmanaged, IEntityComponent
-    {
-        if (entitiesDB.TryQueryEntitiesAndIndex(id, group, out var i, out NB<T> t))
-        {
-            action?.Invoke(ref t[i]);
-            return true;
-        }
-        return false;
-    }
-
-    public static bool TryGetComponent<T>(this EntitiesDB entitiesDB, EGID egid, ActionRef<T> action)
-        where T : unmanaged, IEntityComponent
-    {
-        if (entitiesDB.TryQueryEntitiesAndIndex(egid, out var i, out NB<T> t))
-        {
-            action?.Invoke(ref t[i]);
-            return true;
-        }
-        return false;
     }
 
     public static bool IsValid(this EGID egid)

@@ -34,8 +34,8 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
                 if (brain[groupIdx].MovementState != MovementState.Wander)
                     continue;
 
-                if(brain[groupIdx].penId == default)
-                    brain[groupIdx].penId = mainPenId;
+                if(brain[groupIdx].PenId == default)
+                    brain[groupIdx].PenId = mainPenId;
 
                 Vector3 newPos = position[groupIdx].Value + direction[groupIdx].Value * deltaTime * WANDER_SPEED;
 
@@ -46,7 +46,7 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
                 {
                     for (var penIdx = 0; penIdx < penCount; penIdx++)
                     {
-                        if (brain[groupIdx].penId != penIds[penIdx])
+                        if (brain[groupIdx].PenId != penIds[penIdx])
                             continue;
 
                         var localX = newPos.x - penPos[penIdx].Value.x;

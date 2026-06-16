@@ -36,9 +36,19 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
             DisguiseId = disguiseEntity.EGID,
         });
 
+        // Spawn in main pen
+        uint penId = default;
+        world.EntitiesDB.QueryEntities<RectPosition>(MainPenGroup.Groups)
+            .Each((uint id, ref RectPosition _) =>
+            {
+                penId = id;
+            });
+
         slimeEntity.Init(new SlimeBrain
         {
             MovementState = MovementState.Wander,
+            PenId = penId,
+            RandomizePositionInPen = true,
         });
 
         slimeEntity.Init(new Direction
@@ -61,17 +71,17 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
         var (elapsedTime, count) = entitiesDB.QueryEntities<ElapsedTime>(GameStatTag.Group);
 
 
-        
+
         for (var i = 0; i < count1; i++)
         {
             ref var spawner = ref c1[i];
             spawner.TimeUntilSpawn -= deltaTime;
-           
+
 
             if (spawner.TimeUntilSpawn <= 0)
             {
                 var spawnRateCurve = animationCurveResourceManager[spawner.SpawnRateCurveId];
-                SlimeSpawnerSystem.SpawnSlime(GameContext.World, (SlimeColor)Random.Range(1,3));
+                SlimeSpawnerSystem.SpawnSlime(GameContext.World, (SlimeColor)Random.Range(1, 3));
                 spawner.TimeUntilSpawn = spawnRateCurve.Evaluate(elapsedTime[0].ValueSeconds);
             }
         }

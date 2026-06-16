@@ -25,6 +25,7 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 
     public void Update()
     {
+        // Make slime bigger when grabbed
         entitiesDB.QueryEntities<GameObjectReference, SlimeBrain>(SlimeGroup.Groups)
             .Each((ref GameObjectReference gor, ref SlimeBrain slimeBrain) =>
             {
@@ -95,15 +96,34 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                     rtr.Id = rtId;
                 });
             entitiesDB.TryGetComponent(id, groupID,
-                (ref RectPosition rp) =>
-                {
-                    rp.Value = rt.anchoredPosition;
-                });
-            entitiesDB.TryGetComponent(id, groupID,
                 (ref RectBoundary rb) =>
                 {
                     rb.Width = rt.sizeDelta.x;
                     rb.Height = rt.sizeDelta.y;
+                });
+
+            // Randomize position in pen
+            entitiesDB.TryGetComponent(id, groupID,
+                (ref SlimeBrain sb, ref RectPosition rp, ref RectBoundary rb) =>
+                {
+                    if (!sb.RandomizePositionInPen) { return; }
+
+                    Vector2 slimeExtents = 0.5f * new Vector2(rt.sizeDelta.x, rt.sizeDelta.y);
+                    Vector2 position = default;
+                    entitiesDB.TryGetComponent(sb.PenId, PenGroupTag.Groups,
+                        (ref RectPosition rp, ref RectBoundary rb) =>
+                        {
+                            var penExtents = 0.5f * new Vector2(rb.Width, rb.Height);
+                            var xMin = rp.Value.x - penExtents.x + slimeExtents.x;
+                            var xMax = rp.Value.x + penExtents.x - slimeExtents.x;
+                            var yMin = rp.Value.y - penExtents.y + slimeExtents.y;
+                            var yMax = rp.Value.y + penExtents.y - slimeExtents.y;
+                            position = new(
+                                Random.Range(xMin, xMax),
+                                Random.Range(yMin, yMax)
+                            );
+                        });
+                    rp.Value = position;
                 });
 
             go.GetComponent<EntityReferenceHolder>().EGID = new(entityIds[i], groupID);
