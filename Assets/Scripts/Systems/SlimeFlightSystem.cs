@@ -6,11 +6,15 @@ public class SlimeFlightSystem : ISystem, IQueryingEntitiesEngine
 {
     public EntitiesDB entitiesDB { get; set; }
 
-    private readonly RectTransformResourceManager rectTransformResourceManager;
+    private const float FlightTime = 1.0f;
 
-    public SlimeFlightSystem(RectTransformResourceManager rectTransformResourceManager)
+    private readonly RectTransformResourceManager rectTransformResourceManager;
+    private readonly AnimationCurveResourceManager animationCurveResourceManager;
+
+    public SlimeFlightSystem(RectTransformResourceManager rectTransformResourceManager, AnimationCurveResourceManager animationCurveResourceManager)
     {
         this.rectTransformResourceManager = rectTransformResourceManager;
+        this.animationCurveResourceManager = animationCurveResourceManager;
     }
 
     public void Ready() { }
@@ -28,6 +32,7 @@ public class SlimeFlightSystem : ISystem, IQueryingEntitiesEngine
                     sb.FlightStartingPosition = rp.Value;
 
                     Vector2 slimeExtents = 0.5f * new Vector2(rb.Width, rb.Height);
+                    Vector2 startPosition = sb.FlightStartingPosition;
                     Vector2 targetPosition = default;
                     entitiesDB.TryGetComponent(sb.PenId, PenGroupTag.Groups,
                         (ref RectPosition rp, ref RectBoundary rb) =>
@@ -37,14 +42,23 @@ public class SlimeFlightSystem : ISystem, IQueryingEntitiesEngine
                             var xMax = rp.Value.x + penExtents.x - slimeExtents.x;
                             var yMin = rp.Value.y - penExtents.y + slimeExtents.y;
                             var yMax = rp.Value.y + penExtents.y - slimeExtents.y;
-                            targetPosition = new(
-                                Random.Range(xMin, xMax),
-                                Random.Range(yMin, yMax)
-                            );
+
+                            var minDistance = 4.0f * slimeExtents.x;
+                            for (var i = 0; i < 10; i++)
+                            {
+                                targetPosition = new(
+                                    Random.Range(xMin, xMax),
+                                    Random.Range(yMin, yMax)
+                                );
+                                if (Vector2.Distance(startPosition, targetPosition) > minDistance)
+                                {
+                                    break;
+                                }
+                            }
                         });
                     sb.FlightTargetPosition = targetPosition;
 
-                    sb.FlightRotationSpeed = Random.Range(200.0f, 400.0f);
+                    sb.FlightRotationDirection = Random.value < 0.5f ? -1 : 1;
                 }
 
                 var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group).ValueSeconds;
@@ -52,15 +66,26 @@ public class SlimeFlightSystem : ISystem, IQueryingEntitiesEngine
                 time += deltaTime;
 
                 // Set flight time
-                if (time > 2.0f)
+                if (time > FlightTime)
                 {
                     sb.MovementState = MovementState.Wander;
                     // Make slime angry
+                    sb.IsSpeedUp = true;
                     return;
                 }
 
-                var rt = rectTransformResourceManager[rtr.Id];
-                rt.Rotate(0, 0, sb.FlightRotationSpeed * deltaTime);
+                if (entitiesDB.TryGetSingletonComponent(SlimeFlightConfigEntity.Group, out SlimeFlightConfig flightConfig))
+                {
+                    var flightCurve = animationCurveResourceManager[flightConfig.FlightCurveId];
+                    var t = flightCurve.Evaluate(time / FlightTime);
+                    rp.Value = Vector2.Lerp(sb.FlightStartingPosition, sb.FlightTargetPosition, t);
+
+                    flightCurve = animationCurveResourceManager[flightConfig.FlightRotationCurveId];
+                    t = flightCurve.Evaluate(time / FlightTime);
+                    var numRotations = 3 * sb.FlightRotationDirection;
+                    var rt = rectTransformResourceManager[rtr.Id];
+                    rt.localRotation = Quaternion.Euler(0, 0, Mathf.Lerp(0, numRotations * 360.0f, t));
+                }
             });
     }
 }

@@ -8,15 +8,11 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 {
     public EntitiesDB entitiesDB { get; set; }
 
-    private readonly GameObjectResourceManager gameObjectResourceManager;
-    private readonly RectTransformResourceManager rectTransformResourceManager;
+    private readonly ResourceManagers resourceManagers;
 
-    public SlimeSystem(
-        GameObjectResourceManager gameObjectResourceManager,
-        RectTransformResourceManager rectTransformResourceManager)
+    public SlimeSystem(ResourceManagers resourceManagers)
     {
-        this.gameObjectResourceManager = gameObjectResourceManager;
-        this.rectTransformResourceManager = rectTransformResourceManager;
+        this.resourceManagers = resourceManagers;
     }
 
     public void Ready()
@@ -25,11 +21,11 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 
     public void Update()
     {
-        entitiesDB.QueryEntities<GameObjectReference,  SlimeBrain>(SlimeGroup.Groups)
-            .Each((ref GameObjectReference gor, ref SlimeBrain slimeBrain) =>
+        entitiesDB.QueryEntities<GameObjectReference, Slime, SlimeBrain>(SlimeGroup.Groups)
+            .Each((ref GameObjectReference gor, ref Slime slime, ref SlimeBrain slimeBrain) =>
             {
                 // Make slime bigger when grabbed
-                var go = gameObjectResourceManager[gor.Id];
+                var go = resourceManagers.Get<GameObject>(gor.Id);
                 if (slimeBrain.MovementState == MovementState.Grabbed)
                 {
                     go.transform.localScale = 1.25f * Vector3.one;
@@ -44,6 +40,10 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                 {
                     go.transform.localRotation = default;
                 }
+
+                // Angry eyebrows
+                var angryEyebrows = resourceManagers.Get<SlimeGameObject>(slime.SlimeGameObjectId).angryEyebrows;
+                angryEyebrows.SetActive(slimeBrain.IsSpeedUp);
             });
     }
 
@@ -63,7 +63,7 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 
             try
             {
-                go = gameObjectResourceManager[gor.Id];
+                go = resourceManagers.Get<GameObject>(gor.Id);
                 rt = go.GetComponent<RectTransform>();
                 rtId = GameContext.RectTransformResourceManager.Add(rt);
             }
@@ -82,20 +82,25 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                 var slime = entitiesDB.QueryEntity<Slime>(id, groupID);
                 GameObject prefab = slime.SlimeColor switch
                 {
-                    SlimeColor.Red => gameObjectResourceManager[slimeSpawner.SlimeRedPrefabId],
-                    SlimeColor.Blue => gameObjectResourceManager[slimeSpawner.SlimeBluePrefabId],
-                    _ => gameObjectResourceManager[slimeSpawner.SlimePrefabId],
+                    SlimeColor.Red => resourceManagers.Get<GameObject>(slimeSpawner.SlimeRedPrefabId),
+                    SlimeColor.Blue => resourceManagers.Get<GameObject>(slimeSpawner.SlimeBluePrefabId),
+                    _ => resourceManagers.Get<GameObject>(slimeSpawner.SlimePrefabId),
                 };
-                var parent = gameObjectResourceManager[gameCanvas.SlimesParentGoId];
+                var parent = resourceManagers.Get<GameObject>(gameCanvas.SlimesParentGoId);
 
                 go = Object.Instantiate(prefab, parent.transform);
                 go.transform.SetAsFirstSibling();
-                gor.Id = gameObjectResourceManager.Add(go);
+                gor.Id = resourceManagers.Add(go);
 
                 rt = go.GetComponent<RectTransform>();
-                rtId = rectTransformResourceManager.Add(rt);
+                rtId = resourceManagers.Add(rt);
             }
 
+            entitiesDB.TryGetComponent(id, groupID,
+                (ref Slime slime) =>
+                {
+                    slime.SlimeGameObjectId = resourceManagers.Add(go.GetComponent<SlimeGameObject>());
+                });
             entitiesDB.TryGetComponent(id, groupID,
                 (ref RectTransformReference rtr) =>
                 {

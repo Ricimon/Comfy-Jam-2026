@@ -4,6 +4,7 @@ using UnityEngine;
 public class GameContext
 {
     public static World World;
+    public static ResourceManagers ResourceManagers;
     public static GameObjectResourceManager GameObjectResourceManager;
     public static RectTransformResourceManager RectTransformResourceManager;
     public static AnimationCurveResourceManager AnimationCurveResourceManager;
@@ -15,6 +16,10 @@ public class GameContext
         GameObjectResourceManager = new ();
         RectTransformResourceManager = new();
         AnimationCurveResourceManager = new();
+        ResourceManagers = new();
+        ResourceManagers.AddPrebuiltResourceManager<GameObject>(GameObjectResourceManager);
+        ResourceManagers.AddPrebuiltResourceManager<RectTransform>(RectTransformResourceManager);
+        ResourceManagers.AddPrebuiltResourceManager<AnimationCurve>(AnimationCurveResourceManager);
 
         //Entities
         var gameStatEntity = World.Entity<GameStatDescriptor>(GameStatTag.Group);
@@ -38,8 +43,9 @@ public class GameContext
         World.AddSystem(new RectPositionSystem(RectTransformResourceManager));
         World.AddSystem(new InputSystem(GameObjectResourceManager));
         World.AddSystem(new SlimeSpawnerSystem(AnimationCurveResourceManager));
-        World.AddSystem(new SlimeSystem(GameObjectResourceManager, RectTransformResourceManager));
+        World.AddSystem(new SlimeSystem(ResourceManagers));
         World.AddSystem(new SlimeWanderSystem());
+        World.AddSystem(new SlimeFlightSystem(RectTransformResourceManager, AnimationCurveResourceManager));
         World.AddSystem(new DisguiseSystem(World, GameObjectResourceManager, RectTransformResourceManager));
     }
 }

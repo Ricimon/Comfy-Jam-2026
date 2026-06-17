@@ -25,7 +25,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1772020410735963222}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33,7 +33,7 @@ RectTransform:
   - {fileID: 3950760538856126161}
   - {fileID: 4043435403826272273}
   - {fileID: 6256346263416496511}
-  m_Father: {fileID: 4928735291701826834}
+  m_Father: {fileID: 8514821058133895922}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -366,13 +366,13 @@ PrefabInstance:
     - {fileID: 4062664727201932822, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
     - {fileID: 3227183664915076150, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2598874823335427924, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 1611678300900065460, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1740144017767093651}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
---- !u!224 &4928735291701826834 stripped
+--- !u!224 &8514821058133895922 stripped
 RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2598874823335427924, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1611678300900065460, guid: ecfe479ce91f33c4ba781e173d7f69d3, type: 3}
   m_PrefabInstance: {fileID: 6951143587997067846}
   m_PrefabAsset: {fileID: 0}

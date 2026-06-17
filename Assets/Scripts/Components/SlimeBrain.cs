@@ -1,10 +1,10 @@
-using UnityEngine;
-using ECS;
 using Svelto.ECS;
+using UnityEngine;
 
 public struct SlimeBrain : IEntityComponent
 {
     public MovementState MovementState;
+    public bool IsSpeedUp;
     public uint PenId;
     public bool RandomizePositionInPen;
 
@@ -12,5 +12,5 @@ public struct SlimeBrain : IEntityComponent
     public float FlightAnimationTime;
     public Vector2 FlightStartingPosition;
     public Vector2 FlightTargetPosition;
-    public float FlightRotationSpeed;
+    public int FlightRotationDirection;
 }
