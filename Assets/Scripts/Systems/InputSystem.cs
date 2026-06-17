@@ -87,7 +87,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                     {
                         if (!slime.CanPickUp)
                         {
-                            continue;
+                            break;
                         }
                     }
 
@@ -156,12 +156,12 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                         Debug.Log($"Slime dropped in {penGo}");
                                         isSortingPen = false;
                                     }
-                 
+
                                 }
                                 newPenId = id;
                             }
                         });
-                    
+
                     brain.MovementState = MovementState.Wander;
                     direction.Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
                     slime.CanPickUp = !isSortingPen;
@@ -171,7 +171,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         var (score, count) = entitiesDB.QueryEntities<Score>(GameStatTag.Group);
                         score[0].Value++;
                     }
-                    else if(penColor != SlimeColor.None && !isMatchingColor)
+                    else if (penColor != SlimeColor.None && !isMatchingColor)
                     {
                         var (lives, count) = entitiesDB.QueryEntities<Lives>(GameStatTag.Group);
                         lives[0].Value--;
@@ -208,28 +208,48 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                     // Disguise
                     if (DisguiseEntity.Group == erh.EGID.groupID)
                     {
-                        if (entitiesDB.TryGetEntity(erh.EGID, out Disguise disguise))
-                        {
-                            if (!disguise.SlimeId.IsValid())
-                            {
-                                continue;
-                            }
-                        }
-
+                        bool breakLoop = true;
                         entitiesDB.TryGetComponent(erh.EGID,
                             (ref Disguise disguise) =>
                             {
+                                if (!disguise.SlimeId.IsValid())
+                                {
+                                    breakLoop = false;
+                                    return;
+                                }
+
+                                // Make sure the slime can be picked up
+                                var slime = entitiesDB.GetComponent<Slime>(disguise.SlimeId);
+                                if (!slime.CanPickUp)
+                                {
+                                    breakLoop = true;
+                                    return;
+                                }
+
                                 Debug.Log("Removing disguise");
                                 disguise.ShouldRemove = true;
                             });
 
-                        break;
+                        if (breakLoop)
+                        {
+                            break;
+                        }
                     }
-
                     // Slime
                     else if (SlimeGroup.Includes(erh.EGID.groupID))
                     {
-                        // TODO: Make slime angry
+                        entitiesDB.TryGetComponent(erh.EGID,
+                            (ref Slime slime, ref SlimeBrain sb) =>
+                            {
+                                if (!slime.CanPickUp)
+                                {
+                                    return;
+                                }
+
+                                sb.MovementState = MovementState.Flying;
+                                sb.FlightAnimationTime = 0.0f;
+                                GetDraggingFilter().Clear();
+                            });
                         break;
                     }
                 }

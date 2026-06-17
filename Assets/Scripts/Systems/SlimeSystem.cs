@@ -25,10 +25,10 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 
     public void Update()
     {
-        // Make slime bigger when grabbed
-        entitiesDB.QueryEntities<GameObjectReference, SlimeBrain>(SlimeGroup.Groups)
+        entitiesDB.QueryEntities<GameObjectReference,  SlimeBrain>(SlimeGroup.Groups)
             .Each((ref GameObjectReference gor, ref SlimeBrain slimeBrain) =>
             {
+                // Make slime bigger when grabbed
                 var go = gameObjectResourceManager[gor.Id];
                 if (slimeBrain.MovementState == MovementState.Grabbed)
                 {
@@ -37,6 +37,12 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                 else
                 {
                     go.transform.localScale = Vector3.one;
+                }
+
+                // Keep slime upright when not flying
+                if (slimeBrain.MovementState != MovementState.Flying)
+                {
+                    go.transform.localRotation = default;
                 }
             });
     }
