@@ -970,7 +970,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cd824e89f4e4ed4881aa9d22fce14c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DisguseSpawnerInitializer
-  disguiseDefaultPrefab: {fileID: 3970974427852074282, guid: 38fddb1c188c12449b80b1fb35dd867e, type: 3}
+  disguiseDefaultPrefab: {fileID: 3970974427852074282, guid: a013022b8ecd44640b8129b3ce34d604, type: 3}
 --- !u!1 &1485607299
 GameObject:
   m_ObjectHideFlags: 0
