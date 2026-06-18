@@ -1,20 +1,25 @@
 using TMPro;
 using UnityEngine;
+using DG.Tweening;
 
 public class GameCanvasView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI livesText;
-
+    [SerializeField] private UnityEngine.CanvasGroup canvasGroup;
 
     public void Show()
     {
-        gameObject.SetActive(true);
+        canvasGroup.DOFade(1,.25f);
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
 
     public void Hide()
     {
-        gameObject.SetActive(false);
+        canvasGroup.DOFade(0, .25f);
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
     }
 
     void Update()

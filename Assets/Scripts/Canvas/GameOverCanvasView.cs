@@ -2,9 +2,11 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameOverCanvasView : MonoBehaviour
 {
+    [SerializeField] private UnityEngine.CanvasGroup canvasGroup;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private Button retryBtn;
 
@@ -23,15 +25,20 @@ public class GameOverCanvasView : MonoBehaviour
 
     public void Show()
     {
-       GameContext.World.EntitiesDB.QueryEntities<Score>(GameStatTag.Group).Each((ref Score score)=> 
-       {
-           scoreText.text = $"Score: {score.Value}";
-       });
-        gameObject.SetActive(true);
+        GameContext.World.EntitiesDB.QueryEntities<Score>(GameStatTag.Group).Each((ref Score score) =>
+        {
+            scoreText.text = $"Score: {score.Value}";
+        });
+        canvasGroup.DOFade(1, .25f);
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
+
     public void Hide()
     {
-        gameObject.SetActive(false);
+        canvasGroup.DOFade(0, .25f);
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
     }
     private void OnRetryBtnPress()
     {

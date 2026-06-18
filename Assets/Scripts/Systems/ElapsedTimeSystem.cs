@@ -13,11 +13,15 @@ public class ElapsedTimeSystem : ISystem, IQueryingEntitiesEngine
     public void Update()
     {
         var groups = entitiesDB.FindGroups<ElapsedTime>();
+
+        var (pause, scoreCount) = entitiesDB.QueryEntities<Pause>(GameStatTag.Group);
+        if (pause[0].IsPaused)
+            return;
+
         entitiesDB.QueryEntities<ElapsedTime>(groups)
             .Each((ref ElapsedTime elapsedTime)=>
             {
                 elapsedTime.ValueSeconds += Time.deltaTime;
             });
-        var (score, count) = GameContext.World.EntitiesDB.QueryEntities<Score>(GameStatTag.Group);
     }
 }
