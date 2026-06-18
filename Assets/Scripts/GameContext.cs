@@ -13,7 +13,7 @@ public class GameContext
     private static void Initialize()
     {
         World = new World();
-        GameObjectResourceManager = new ();
+        GameObjectResourceManager = new();
         RectTransformResourceManager = new();
         AnimationCurveResourceManager = new();
         ResourceManagers = new();
@@ -32,7 +32,9 @@ public class GameContext
             Value = 4
         });
         gameStatEntity.Init(new ElapsedTime { ValueSeconds = 0 });
+        gameStatEntity.Init(new Pause { IsPaused = true });
 
+        
 
         // Systems
         World.AddSystem(new GameObjectReferenceSystem(GameObjectResourceManager));

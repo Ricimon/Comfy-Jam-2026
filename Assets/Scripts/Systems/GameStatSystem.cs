@@ -12,6 +12,12 @@ public class GameStatSystem : ISystem, IQueryingEntitiesEngine
     {
     }
 
+    public static void ResetTimer(World world)
+    {
+        var (elapsedTime, count) = world.EntitiesDB.QueryEntities<ElapsedTime>(GameStatTag.Group);
+        elapsedTime[0].ValueSeconds = 0;
+    }
+
     public void Update()
     {
         var (score, scoreCount) = entitiesDB.QueryEntities<Score>(GameStatTag.Group);

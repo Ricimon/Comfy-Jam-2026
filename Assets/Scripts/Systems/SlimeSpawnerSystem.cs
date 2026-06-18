@@ -13,6 +13,11 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
         this.animationCurveResourceManager = animationCurveResourceManager;
     }
 
+    public static void DisposeAllSlimes(World world)
+    {
+        world.RemoveEntitiesFromGroup(SlimeGroup.BuildGroup);
+    }
+
     public static EntityInitializer SpawnSlime(World world, SlimeColor slimeColor, DisguiseType disguise = DisguiseType.None)
     {
         var slimeEntity = world.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
