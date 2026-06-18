@@ -5,7 +5,7 @@ public struct SlimeBrain : IEntityComponent
 {
     public MovementState MovementState;
     public bool IsSpeedUp;
-    public uint PenId;
+    public EGID PenId;
     public bool RandomizePositionInPen;
 
     // Flight animation parameters

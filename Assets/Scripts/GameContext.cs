@@ -50,5 +50,6 @@ public class GameContext
         World.AddSystem(new SlimeFlightSystem(RectTransformResourceManager, AnimationCurveResourceManager));
         World.AddSystem(new SlimeDropletSystem(ResourceManagers));
         World.AddSystem(new DisguiseSystem(World, GameObjectResourceManager, RectTransformResourceManager));
+        World.AddSystem(new FlyawayObjectSystem(World, ResourceManagers));
     }
 }

@@ -34,7 +34,7 @@ public class SlimeFlightSystem : ISystem, IQueryingEntitiesEngine
                     Vector2 slimeExtents = 0.5f * new Vector2(rb.Width, rb.Height);
                     Vector2 startPosition = sb.FlightStartingPosition;
                     Vector2 targetPosition = default;
-                    entitiesDB.TryGetComponent(sb.PenId, PenGroupTag.Groups,
+                    entitiesDB.TryGetComponent(sb.PenId,
                         (ref RectPosition rp, ref RectBoundary rb) =>
                         {
                             var penExtents = 0.5f * new Vector2(rb.Width, rb.Height);

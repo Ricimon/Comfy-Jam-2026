@@ -24,7 +24,7 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
 
         var penQuery = entitiesDB.QueryEntities<RectBoundary, RectPosition>(PenGroupTag.Groups);
 
-        uint mainPenId = GetMainPenEGID();
+        EGID mainPenId = GetMainPenEGID();
 
         foreach (var ((brain, position, slimeBoundary, direction, count), _ ) in slimeQuery)
         {
@@ -52,7 +52,7 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
                 {
                     for (var penIdx = 0; penIdx < penCount; penIdx++)
                     {
-                        if (brain[groupIdx].PenId != penIds[penIdx])
+                        if (brain[groupIdx].PenId.entityID != penIds[penIdx])
                             continue;
 
                         var localX = newPos.x - penPos[penIdx].Value.x;
@@ -86,17 +86,17 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
         }
     }
     
-    private uint GetMainPenEGID()
+    private EGID GetMainPenEGID()
     {
         var mainPenQuery = entitiesDB.QueryEntities<RectBoundary>(MainPenGroupTag.Groups);
         foreach (var ((boundaries, ids, count), group) in mainPenQuery)
         {
             if (count > 0)
             {
-                return ids[0];
+                return new(ids[0], group);
             }
         }
-        return 0;
+        return default;
     }
 
     

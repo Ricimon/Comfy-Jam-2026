@@ -31,21 +31,33 @@ public class SlimeDropletSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddE
             var id = entityIDs[i];
             ref var sd = ref slimeDroplets[i];
 
-            var color = sd.Color;
+            SlimeDroplet sdCopy = sd;
             entitiesDB.TryGetComponent(id, groupID,
-                (ref GameObjectReference gor) =>
+                (ref GameObjectReference gor, ref RectTransformReference rtr) =>
                 {
-                    var go = resourceManagers.Get<GameObject>(gor.Id);
+                    if (!resourceManagers.TryGet<GameObject>(gor.Id, out var go))
+                    {
+                        var spawner = entitiesDB.GetSingletonComponent<SlimeDropletSpawner>(SlimeDropletSpawnerEntity.Group);
+                        var gameCanvas = entitiesDB.GetSingletonComponent<GameCanvas>(CanvasGroup.Group);
+                        var prefab = resourceManagers.Get<GameObject>(spawner.DropletPrefabId);
+                        var parent = resourceManagers.Get<GameObject>(gameCanvas.SlimesParentGoId);
+                        go = Object.Instantiate(prefab, parent.transform);
+                        go.transform.SetSiblingIndex(sdCopy.TransformSiblingIndex);
+                        gor.Id = resourceManagers.Add(go);
+                        rtr.Id = resourceManagers.Add(go.GetComponent<RectTransform>());
+                    }
                     if (go.TryGetComponent(out Image image))
                     {
-                        image.color = color;
+                        image.color = sdCopy.Color;
                     }
                 });
 
             entitiesDB.TryGetComponent(id, groupID,
-                (ref FlyawayObject fo) =>
+                (ref FlyawayObject fo, ref RectPosition rp) =>
                 {
+                    fo.IsActive = true;
                     fo.RotationFollowsPath = true;
+                    fo.StartingPosition = rp.Value;
                 });
         }
     }

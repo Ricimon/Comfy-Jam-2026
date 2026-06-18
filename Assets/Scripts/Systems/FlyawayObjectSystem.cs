@@ -1,5 +1,6 @@
 using ECS;
 using Svelto.ECS;
+using UnityEngine;
 
 public class FlyawayObjectSystem : ISystem, IQueryingEntitiesEngine
 {
@@ -20,50 +21,49 @@ public class FlyawayObjectSystem : ISystem, IQueryingEntitiesEngine
 
     public void Update()
     {
-        // var groups = entitiesDB.FindGroups<FlyawayObject, RectTransformReference, RectPosition>();
-        // entitiesDB.QueryEntities<FlyawayObject, RectTransformReference, RectPosition>(groups)
-        //     .Each((uint id, ref FlyawayObject fo, ref RectTransformReference rtr, ref RectPosition rp) =>
-        //     {
-        //         if (!fo.ShouldRemove) { return; }
+        var groups = entitiesDB.FindGroups<FlyawayObject, RectTransformReference, RectPosition>();
+        entitiesDB.QueryEntities<FlyawayObject, RectTransformReference, RectPosition>(groups)
+            .Each((EGID egid, ref FlyawayObject fo, ref RectTransformReference rtr, ref RectPosition rp) =>
+            {
+                if (!fo.IsActive) {return;}
 
-        //         if (fo.SlimeId.IsValid())
-        //         {
-        //             var slimeGor = entitiesDB.GetComponent<GameObjectReference>(fo.SlimeId);
-        //             var slimeRp = entitiesDB.GetComponent<RectPosition>(fo.SlimeId);
-        //             var slimeGo = gameObjectResourceManager[slimeGor.Id];
+                if (fo.AnimatingTIme == 0)
+                {
+                    // Set randomized parameters
+                    var angle = Random.Range(30.0f, 150.0f) * Mathf.Deg2Rad;
+                    var speed = Random.Range(200.0f, 500.0f);
+                    fo.FlyVector = speed * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                    fo.RotationSpeed = Random.Range(200.0f, 400.0f);
+                }
 
-        //             var go = gameObjectResourceManager[gor.Id];
+                var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group).ValueSeconds;
+                ref var time = ref fo.AnimatingTIme;
+                time += deltaTime;
 
-        //             // Remove from Slime
-        //             fo.SlimeId = default;
+                if (time > 5.0f)
+                {
+                    world.RemoveEntity<BaseEntityDescriptor>(egid);
+                    return;
+                }
 
-        //             go.transform.SetParent(slimeGo.transform.parent, true);
-        //             go.transform.SetSiblingIndex(slimeGo.transform.GetSiblingIndex() + 1);
+                var gravity = -1000.0f;
 
-        //             // Set randomized parameters
-        //             var angle = Random.Range(30.0f, 150.0f) * Mathf.Deg2Rad;
-        //             var speed = Random.Range(200.0f, 500.0f);
-        //             fo.RemovalFlyVector = speed * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-        //             fo.RemovalRotationSpeed = Random.Range(200.0f, 400.0f);
-        //             fo.RemovalStartingPosition = slimeRp.Value;
-        //         }
+                var x = fo.StartingPosition.x + fo.FlyVector.x * time;
+                var y = fo.StartingPosition.y + fo.FlyVector.y * time + 0.5f * gravity * time * time;
+                rp.Value = new(x, y);
 
-        //         var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group).ValueSeconds;
-        //         ref var time = ref fo.RemovalAnimatingTime;
-        //         time += deltaTime;
-
-        //         if (time > 5.0f)
-        //         {
-        //             world.RemoveEntity<DisguiseEntity>(id, DisguiseEntity.Group);
-        //             return;
-        //         }
-
-        //         var x = fo.RemovalStartingPosition.x + fo.RemovalFlyVector.x * time;
-        //         var y = fo.RemovalStartingPosition.y + fo.RemovalFlyVector.y * time + 0.5f * -1000.0f * time * time;
-        //         rp.Value = new(x, y);
-
-        //         var rt = rectTransformResourceManager[rtr.Id];
-        //         rt.Rotate(0, 0, fo.RemovalRotationSpeed * deltaTime);
-        //     });
+                var rt = resourceManagers.Get<RectTransform>(rtr.Id);
+                if (fo.RotationFollowsPath)
+                {
+                    var movementVector = new Vector2(
+                        fo.FlyVector.x,
+                        fo.FlyVector.y + gravity * time
+                    );
+                }
+                else
+                {
+                    rt.Rotate(0, 0, fo.RotationSpeed * deltaTime);
+                }
+            });
     }
 }

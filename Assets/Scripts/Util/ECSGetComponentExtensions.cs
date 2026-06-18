@@ -115,9 +115,9 @@ public static class ECSGetComponentExtensions
     {
         bool foundEntity = false;
         entitiesDB.QueryEntities<T>(groups)
-            .Each((uint i, ref T t) =>
+            .Each((EGID egid, ref T t) =>
             {
-                if (i == id)
+                if (egid.entityID == id)
                 {
                     action?.Invoke(ref t);
                     foundEntity = true;
@@ -132,9 +132,9 @@ public static class ECSGetComponentExtensions
     {
         bool foundEntity = false;
         entitiesDB.QueryEntities<T1, T2>(groups)
-            .Each((uint i, ref T1 t1, ref T2 t2) =>
+            .Each((EGID egid, ref T1 t1, ref T2 t2) =>
             {
-                if (i == id)
+                if (egid.entityID == id)
                 {
                     action?.Invoke(ref t1, ref t2);
                     foundEntity = true;
@@ -150,9 +150,9 @@ public static class ECSGetComponentExtensions
     {
         bool foundEntity = false;
         entitiesDB.QueryEntities<T1, T2, T3>(groups)
-            .Each((uint i, ref T1 t1, ref T2 t2, ref T3 t3) =>
+            .Each((EGID egid, ref T1 t1, ref T2 t2, ref T3 t3) =>
             {
-                if (i == id)
+                if (egid.entityID == id)
                 {
                     action?.Invoke(ref t1, ref t2, ref t3);
                     foundEntity = true;

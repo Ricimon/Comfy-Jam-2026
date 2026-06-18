@@ -121,7 +121,7 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 
                     Vector2 slimeExtents = 0.5f * new Vector2(rt.sizeDelta.x, rt.sizeDelta.y);
                     Vector2 position = default;
-                    entitiesDB.TryGetComponent(sb.PenId, PenGroupTag.Groups,
+                    entitiesDB.TryGetComponent(sb.PenId,
                         (ref RectPosition rp, ref RectBoundary rb) =>
                         {
                             var penExtents = 0.5f * new Vector2(rb.Width, rb.Height);

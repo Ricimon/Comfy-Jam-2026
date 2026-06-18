@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DBC.Common;
 using Svelto.DataStructures.Experimental;
 using Svelto.ECS.ResourceManager;
 
@@ -22,6 +23,24 @@ public class ResourceManagers
         }
         var rm = resourceManagers[typeof(T)] as ResourceManager<T>;
         return rm.Add(resource);
+    }
+
+    public bool Has<T>(ValueIndex index) where T : class
+    {
+        if (resourceManagers.TryGetValue(typeof(T), out var rmo))
+        {
+            var rm = rmo as ResourceManager<T>;
+            try
+            {
+                _ = rm[index];
+                return true;
+            }
+            catch (PreconditionException)
+            {
+                return false;
+            }
+        }
+        return false;
     }
 
     public T Get<T>(ValueIndex index) where T : class

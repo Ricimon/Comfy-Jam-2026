@@ -132,20 +132,20 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                 (ref RectPosition p, ref Slime slime, ref SlimeBrain brain, ref Direction direction) =>
                 {
                     var position = p.Value;
-                    uint newPenId = default;
+                    EGID newPenId = default;
                     bool isSortingPen = false;
                     bool isMatchingColor = false;
                     SlimeColor penColor = SlimeColor.None;
 
                     entitiesDB.QueryEntities<RectPosition, RectBoundary, GameObjectReference>(PenGroupTag.Groups)
-                        .Each((uint id, ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
+                        .Each((EGID egid, ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
                         {
                             if (RectUtils.CreateCenteredRect(pp.Value, new(pb.Width, pb.Height)).Contains(position))
                             {
                                 var penGo = gameObjectResourceManager[gor.Id];
                                 if (penGo != null)
                                 {
-                                    if (entitiesDB.TryGetEntity<SortingPen>(id, SortingPenGroup.BuildGroup, out var sortingPen))
+                                    if (entitiesDB.TryGetEntity<SortingPen>(egid, out var sortingPen))
                                     {
                                         Debug.Log($"Slime dropped in {penGo}. Sorting pen type is {sortingPen.Type}");
                                         isSortingPen = true;
@@ -158,7 +158,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                     }
 
                                 }
-                                newPenId = id;
+                                newPenId = egid;
                             }
                         });
 

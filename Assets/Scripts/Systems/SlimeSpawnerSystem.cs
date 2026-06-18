@@ -42,11 +42,11 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
         });
 
         // Spawn in main pen
-        uint penId = default;
+        EGID penId = default;
         world.EntitiesDB.QueryEntities<RectPosition>(MainPenGroup.Groups)
-            .Each((uint id, ref RectPosition _) =>
+            .Each((EGID egid, ref RectPosition _) =>
             {
-                penId = id;
+                penId = egid;
             });
 
         slimeEntity.Init(new SlimeBrain
