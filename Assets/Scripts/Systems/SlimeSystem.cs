@@ -82,7 +82,7 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                 var slime = entitiesDB.QueryEntity<Slime>(id, groupID);
                 GameObject prefab = slime.SlimeColor switch
                 {
-                    SlimeColor.Red => resourceManagers.Get<GameObject>(slimeSpawner.SlimeRedPrefabId),
+                    SlimeColor.Yellow => resourceManagers.Get<GameObject>(slimeSpawner.SlimeYellowPrefabId),
                     SlimeColor.Blue => resourceManagers.Get<GameObject>(slimeSpawner.SlimeBluePrefabId),
                     _ => resourceManagers.Get<GameObject>(slimeSpawner.SlimePrefabId),
                 };

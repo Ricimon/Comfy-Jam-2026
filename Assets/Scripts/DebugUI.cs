@@ -14,9 +14,9 @@ public class DebugUI : MonoBehaviour
             SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.None);
         }
         GUILayout.Space(10);
-        if (GUILayout.Button("Spawn Red Slime"))
+        if (GUILayout.Button("Spawn Yellow Slime"))
         {
-            SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Red);
+            SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Yellow);
         }
         GUILayout.Space(10);
         if (GUILayout.Button("Spawn Blue Slime"))
@@ -30,9 +30,9 @@ public class DebugUI : MonoBehaviour
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Spawn Disguised Red Slime"))
+        if (GUILayout.Button("Spawn Disguised Yellow Slime"))
         {
-            SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Red, DisguiseType.Default);
+            SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.Yellow, DisguiseType.Default);
         }
         GUILayout.Space(10);
         if (GUILayout.Button("Spawn Disguised Blue Slime"))

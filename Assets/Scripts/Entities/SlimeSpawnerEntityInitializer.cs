@@ -3,7 +3,7 @@ using UnityEngine;
 public class SlimeSpawnerEntityInitializer : MonoBehaviour
 {
     public GameObject slimePrefab;
-    public GameObject slimeRedPrefab;
+    public GameObject slimeYellowPrefab;
     public GameObject slimeBluePrefab;
     public SpawnerConfig spawnerConfig;
 
@@ -11,7 +11,7 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
     {
         var goId = GameContext.GameObjectResourceManager.Add(gameObject);
         var id = GameContext.GameObjectResourceManager.Add(slimePrefab);
-        var idRed = GameContext.GameObjectResourceManager.Add(slimeRedPrefab);
+        var idYellow = GameContext.GameObjectResourceManager.Add(slimeYellowPrefab);
         var idBlue = GameContext.GameObjectResourceManager.Add(slimeBluePrefab);
         var idSpawnRate = GameContext.AnimationCurveResourceManager.Add(spawnerConfig.SpawnRate);
 
@@ -22,7 +22,7 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
         entity.Init(new SlimeSpawner
         {
             SlimePrefabId = id,
-            SlimeRedPrefabId = idRed,
+            SlimeYellowPrefabId = idYellow,
             SlimeBluePrefabId = idBlue,
             SpawnRateCurveId = idSpawnRate,
             TimeUntilSpawn = 1,

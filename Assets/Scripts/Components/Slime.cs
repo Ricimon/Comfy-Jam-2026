@@ -6,6 +6,7 @@ public enum SlimeColor
     None,
     Blue,
     Red,
+    Yellow,
 }
 
 public struct Slime : IEntityComponent

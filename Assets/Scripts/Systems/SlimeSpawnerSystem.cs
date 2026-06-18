@@ -81,7 +81,9 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
             if (spawner.TimeUntilSpawn <= 0)
             {
                 var spawnRateCurve = animationCurveResourceManager[spawner.SpawnRateCurveId];
-                SlimeSpawnerSystem.SpawnSlime(GameContext.World, (SlimeColor)Random.Range(1, 3));
+                var slimeColor = Random.value < 0.5f ? SlimeColor.Blue : SlimeColor.Yellow;
+                var disguise = Random.value < 0.5f ? DisguiseType.None : DisguiseType.Default;
+                SpawnSlime(GameContext.World, slimeColor, disguise);
                 spawner.TimeUntilSpawn = spawnRateCurve.Evaluate(elapsedTime[0].ValueSeconds);
             }
         }
