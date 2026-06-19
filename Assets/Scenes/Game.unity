@@ -1001,8 +1001,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioClipInitializer
   audioSource: {fileID: 1102945159}
-  audio1: {fileID: 8300000, guid: 5b8006f6fdbec9049a60663bf1973bf8, type: 3}
-  audio2: {fileID: 8300000, guid: bfce9b9b9e2385f41abe76bfd94072d6, type: 3}
+  Button: {fileID: 8300000, guid: 5b8006f6fdbec9049a60663bf1973bf8, type: 3}
+  Correct: {fileID: 8300000, guid: bfce9b9b9e2385f41abe76bfd94072d6, type: 3}
+  Death: {fileID: 8300000, guid: 0397bfc69c65d5d45a58243598f2e7f5, type: 3}
+  Disguise: {fileID: 8300000, guid: dc7de85777489384580571d462abfb64, type: 3}
+  Drop: {fileID: 8300000, guid: aab3be99f371d7541a9a391fab03fa09, type: 3}
+  Pickup: {fileID: 8300000, guid: 4817e6da7b259124dbaf7d20fca20042, type: 3}
+  Wrong: {fileID: 8300000, guid: 83b0964539516e64c91704cc3b7f28e8, type: 3}
 --- !u!1 &1418445845
 GameObject:
   m_ObjectHideFlags: 0
