@@ -45,6 +45,8 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                     disguise.RemovalFlyVector = speed * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                     disguise.RemovalRotationSpeed = Random.Range(200.0f, 400.0f);
                     disguise.RemovalStartingPosition = slimeRp.Value;
+
+                    AudioClipSystem.PlaySFX(SFX.Disguise);
                 }
 
                 var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group).ValueSeconds;

@@ -191,13 +191,6 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         penColor = closestPenColor;
                         isSortingPen = penColor != SlimeColor.None;
                     }
-                    // var gameCanvas = entitiesDB.GetSingletonComponent<GameCanvas>(CanvasGroup.Group);
-                    // var slimeParent = resourceManagers.Get<GameObject>(gameCanvas.SlimesParentGoId);
-                    // var gor = entitiesDB.QueryEntity<GameObjectReference>(egid);
-                    // var go = resourceManagers.Get<GameObject>(gor.Id);
-                    // go.transform.SetParent(slimeParent.transform);
-                    // go.transform.SetAsLastSibling();
-
                     brain.MovementState = MovementState.Wander;
                     direction.Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
                     slime.CanPickUp = !isSortingPen;
@@ -219,6 +212,8 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
 
                     if (newPenId != default)
                         brain.PenId = newPenId;
+
+                    AudioClipSystem.PlaySFX(SFX.Drop);
                 });
 
             draggingFilter.Clear();
@@ -289,6 +284,8 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                 sb.MovementState = MovementState.Flying;
                                 sb.FlightAnimationTime = 0.0f;
                                 GetDraggingFilter().Clear();
+
+                                AudioClipSystem.PlaySFX(SFX.Wrong);
                             });
                         break;
                     }

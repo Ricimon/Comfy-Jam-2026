@@ -42,7 +42,7 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
                 var wanderSpeed = WANDER_SPEED;
                 if (brain.IsSpeedUp)
                 {
-                    wanderSpeed *= 1.5f;
+                    wanderSpeed *= 2.0f;
                     walkCycleDuration *= 0.5f;
                 }
 
