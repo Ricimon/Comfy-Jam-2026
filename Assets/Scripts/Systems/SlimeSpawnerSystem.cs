@@ -10,6 +10,7 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
     private readonly DisguiseType[] possibleDisguises = new[]
     {
         DisguiseType.Default,
+        DisguiseType.BlueMask,
         DisguiseType.YellowHoodie,
         DisguiseType.BlueHoodie,
     };
