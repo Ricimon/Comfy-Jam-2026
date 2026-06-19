@@ -77,6 +77,16 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
 
                 var lifeDuration = 10.0f;
 
+                if (timeAlive > 0.5f * lifeDuration)
+                {
+                    var pulsatingTime = timeAlive - 0.5f * lifeDuration;
+                    var pulsateInterval = 0.25f;
+                    var t = pulsatingTime % pulsateInterval / pulsateInterval;
+                    t = Mathf.Sin(t * Mathf.PI);
+                    var scaleMultiplier = 1.0f + t * 0.4f;
+                    var rt = rtr.Id.ToObject(resourceManagers);
+                    rt.localScale *= scaleMultiplier;
+                }
                 if (timeAlive > lifeDuration)
                 {
                     // Slime dies and lose a life
