@@ -22,6 +22,8 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
     {
         var slimeEntity = world.Entity<SlimeEntityDescriptor>(SlimeGroup.BuildGroup);
 
+        AudioClipSystem.PlaySFX(SFX.Drop);
+
         EntityInitializer disguiseEntity = default;
         if (disguise != DisguiseType.None)
         {

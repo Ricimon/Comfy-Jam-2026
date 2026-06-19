@@ -34,6 +34,10 @@ public class MainCanvasView : MonoBehaviour
         {
             lives.Value = 3;
         });
+        GameContext.World.EntitiesDB.QueryEntities<Score>(GameStatTag.Group).Each((ref Score score) =>
+        {
+            score.Value = 0;
+        });
 
         GameStatSystem.ResetTimer(GameContext.World);
         SlimeSpawnerSystem.DisposeAllSlimes(GameContext.World);
