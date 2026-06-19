@@ -8,6 +8,7 @@ public class GameContext
     public static GameObjectResourceManager GameObjectResourceManager;
     public static RectTransformResourceManager RectTransformResourceManager;
     public static AnimationCurveResourceManager AnimationCurveResourceManager;
+    public static AudioClipResourceManager AudioClipResourceManager;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
@@ -17,9 +18,11 @@ public class GameContext
         RectTransformResourceManager = new();
         AnimationCurveResourceManager = new();
         ResourceManagers = new();
+        AudioClipResourceManager = new();
         ResourceManagers.AddPrebuiltResourceManager<GameObject>(GameObjectResourceManager);
         ResourceManagers.AddPrebuiltResourceManager<RectTransform>(RectTransformResourceManager);
         ResourceManagers.AddPrebuiltResourceManager<AnimationCurve>(AnimationCurveResourceManager);
+        ResourceManagers.AddPrebuiltResourceManager<AudioClip>(AudioClipResourceManager);
 
         //Entities
         var gameStatEntity = World.Entity<GameStatDescriptor>(GameStatTag.Group);
@@ -51,5 +54,6 @@ public class GameContext
         World.AddSystem(new SlimeDropletSystem(ResourceManagers));
         World.AddSystem(new DisguiseSystem(World, ResourceManagers));
         World.AddSystem(new FlyawayObjectSystem(World, ResourceManagers));
+        
     }
 }

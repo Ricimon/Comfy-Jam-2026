@@ -34,6 +34,7 @@ public class TitleCanvasView : MonoBehaviour
 
     private void OnGameStartBtnPress()
     {
+        AudioClipSystem.PlaySFX(SFX.Button);
         onStartAction?.Invoke();
     }
 

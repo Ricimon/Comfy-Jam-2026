@@ -44,5 +44,6 @@ public class GameOverCanvasView : MonoBehaviour
     {
         gameObject.SetActive(false);
         onRetryAction?.Invoke();
+        AudioClipSystem.PlaySFX(SFX.Button);
     }
 }
