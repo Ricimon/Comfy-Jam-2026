@@ -82,6 +82,8 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                     // Slime dies and lose a life
                     if (slime.TimePlayingDeathAnimation == 0)
                     {
+                        AudioClipSystem.PlaySFX(SFX.Death);
+
                         var numDroplets = 3;
                         for (var i = 0; i < numDroplets; i++)
                         {
