@@ -186,12 +186,14 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         var (score, count) = entitiesDB.QueryEntities<Score>(GameStatTag.Group);
                         score[0].Value++;
                         brain.IsSpeedUp = false;
+                        AudioClipSystem.PlaySFX(SFX.Correct);
                     }
                     else if (penColor != SlimeColor.None && !isMatchingColor)
                     {
                         var (lives, count) = entitiesDB.QueryEntities<Lives>(GameStatTag.Group);
                         lives[0].Value--;
                         brain.IsSpeedUp = true;
+                        AudioClipSystem.PlaySFX(SFX.Wrong);
                     }
 
                     if (newPenId != default)
