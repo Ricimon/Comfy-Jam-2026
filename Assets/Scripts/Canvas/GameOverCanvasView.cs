@@ -42,7 +42,6 @@ public class GameOverCanvasView : MonoBehaviour
     }
     private void OnRetryBtnPress()
     {
-        gameObject.SetActive(false);
         onRetryAction?.Invoke();
         AudioClipSystem.PlaySFX(SFX.Button);
     }
