@@ -1,6 +1,7 @@
-using System.Collections.Generic;
 using ECS;
 using Svelto.ECS;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -132,16 +133,24 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                 {
                     var position = p.Value;
                     EGID newPenId = default;
+                    
                     bool isSortingPen = false;
                     bool isMatchingColor = false;
                     SlimeColor penColor = SlimeColor.None;
+                    bool isOutOfBounds = true;
+
+                    EGID closestPen = default;
+                    float closestDistance = float.PositiveInfinity;
+                    SlimeColor closestPenColor = SlimeColor.None;
 
                     entitiesDB.QueryEntities<RectPosition, RectBoundary, GameObjectReference>(PenGroupTag.Groups)
                         .Each((EGID egid, ref RectPosition pp, ref RectBoundary pb, ref GameObjectReference gor) =>
                         {
                             if (RectUtils.CreateCenteredRect(pp.Value, new(pb.Width, pb.Height)).Contains(position))
                             {
+                                isOutOfBounds = false;
                                 var penGo = resourceManagers.Get<GameObject>(gor.Id);
+
                                 if (penGo != null)
                                 {
                                     if (entitiesDB.TryGetEntity<SortingPen>(egid, out var sortingPen))
@@ -159,8 +168,26 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                 }
                                 newPenId = egid;
                             }
+
+                            var penDistance = Vector2.Distance(pp.Value, position);
+                            if(penDistance < closestDistance)
+                            {
+                                closestDistance = penDistance;
+                                closestPen = egid;
+                                if (entitiesDB.TryGetEntity<SortingPen>(egid, out var sortingPen))
+                                {
+                                    closestPenColor = sortingPen.Type;
+                                }
+                                isSortingPen = closestPenColor != SlimeColor.None;
+                            }
+
                         });
 
+                    if (isOutOfBounds)
+                    {
+                        brain.PenId = closestPen;
+                        penColor = closestPenColor;
+                    }
                     // var gameCanvas = entitiesDB.GetSingletonComponent<GameCanvas>(CanvasGroup.Group);
                     // var slimeParent = resourceManagers.Get<GameObject>(gameCanvas.SlimesParentGoId);
                     // var gor = entitiesDB.QueryEntity<GameObjectReference>(egid);
