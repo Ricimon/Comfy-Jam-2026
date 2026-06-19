@@ -1530,6 +1530,7 @@ GameObject:
   - component: {fileID: 2144800147}
   - component: {fileID: 2144800149}
   - component: {fileID: 2144800150}
+  - component: {fileID: 2144800151}
   m_Layer: 0
   m_Name: SlimeSpawner
   m_TagString: Untagged
@@ -1668,6 +1669,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeDropletSpawnerInitializer
   slimeDropletPrefab: {fileID: 5626716507404120394, guid: 1f487083113f49c49a53e4e8bb9c11e6, type: 3}
+--- !u!114 &2144800151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144800146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47add04be1e7f00468b406c8688627be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeConfigInitializer
+  slimeMovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.48915964
+      value: 1.1157442
+      inSlope: -0.9640546
+      outSlope: -0.9640546
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.060326174
+      outWeight: 0.18123601
+    - serializedVersion: 3
+      time: 0.6355519
+      value: 0.46003813
+      inSlope: -5.2054553
+      outSlope: -5.2054553
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.07845826
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.0090824
+      outSlope: -1.0090824
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.16488339
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &579901526818807968
 PrefabInstance:
   m_ObjectHideFlags: 0

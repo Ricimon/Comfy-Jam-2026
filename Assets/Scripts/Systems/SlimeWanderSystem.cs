@@ -1,8 +1,6 @@
 using ECS;
 using Svelto.ECS;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using static ECSUtils;
 
 public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
 {
@@ -10,6 +8,13 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
 
     private const float WANDER_SPEED = 200f;
     private const float BOUNCE_OFFSET = .3f;
+
+    private readonly ResourceManagers resourceManagers;
+
+    public SlimeWanderSystem(ResourceManagers resourceManagers)
+    {
+        this.resourceManagers = resourceManagers;
+    }
     public void Ready()
     {
 
@@ -17,75 +22,78 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
 
     public void Update()
     {
-        var slimeBrainGroup = entitiesDB.FindGroups<SlimeBrain, RectPosition, RectBoundary, Direction>();
-        var slimeQuery = entitiesDB.QueryEntities<SlimeBrain, RectPosition, RectBoundary, Direction>(slimeBrainGroup);
-        var (c2, count2) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group);
-        var deltaTime = count2 > 0 ? c2[0].ValueSeconds : 0;
-
-        var penQuery = entitiesDB.QueryEntities<RectBoundary, RectPosition>(PenGroupTag.Groups);
+        var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group).ValueSeconds;
+        var movementCurve = entitiesDB.GetSingletonComponent<SlimeConfig>(SlimeConfigEntity.Group)
+            .MovementCurveId.ToObject(resourceManagers);
 
         EGID mainPenId = GetMainPenEGID();
 
-        foreach (var ((brain, position, slimeBoundary, direction, count), _ ) in slimeQuery)
-        {
-            for(var groupIdx = 0; groupIdx < count; groupIdx++)
+        var slimeBrainGroup = entitiesDB.FindGroups<SlimeBrain, RectPosition, RectBoundary, Direction>();
+        entitiesDB.QueryEntities<SlimeBrain, RectPosition, RectBoundary, Direction>(slimeBrainGroup)
+            .Each((ref SlimeBrain brain, ref RectPosition position, ref RectBoundary slimeBoundary, ref Direction direction) =>
             {
-                ref var sb = ref brain[groupIdx];
+                if (brain.MovementState != MovementState.Wander)
+                    return;
 
-                if (brain[groupIdx].MovementState != MovementState.Wander)
-                    continue;
+                if (brain.PenId == default)
+                    brain.PenId = mainPenId;
 
-                if(brain[groupIdx].PenId == default)
-                    brain[groupIdx].PenId = mainPenId;
-
+                var walkCycleDuration = 0.8f;
                 var wanderSpeed = WANDER_SPEED;
-                if (sb.IsSpeedUp)
+                if (brain.IsSpeedUp)
                 {
                     wanderSpeed *= 1.5f;
+                    walkCycleDuration *= 0.5f;
                 }
-                Vector3 newPos = position[groupIdx].Value + direction[groupIdx].Value * deltaTime * wanderSpeed;
 
-                var slimeHalfW = slimeBoundary[groupIdx].Width / 2f;
-                var slimeHalfH = slimeBoundary[groupIdx].Height / 2f;
-
-                foreach (var ((penBoundary, penPos, penIds, penCount), group) in penQuery)
+                brain.WalkCycleTime += deltaTime;
+                while (brain.WalkCycleTime > walkCycleDuration && walkCycleDuration > 0)
                 {
-                    for (var penIdx = 0; penIdx < penCount; penIdx++)
-                    {
-                        if (brain[groupIdx].PenId.entityID != penIds[penIdx])
-                            continue;
-
-                        var localX = newPos.x - penPos[penIdx].Value.x;
-                        var localY = newPos.y - penPos[penIdx].Value.y;
-
-                        var penHalfW = penBoundary[penIdx].Width / 2f;
-                        var penHalfH = penBoundary[penIdx].Height / 2f;
-
-
-                        if (localX + slimeHalfW >= penHalfW || localX - slimeHalfW <= -penHalfW)
-                        {
-                            var dir = direction[groupIdx].Value;
-                            dir.x = -dir.x + Random.Range(0, BOUNCE_OFFSET);
-                            direction[groupIdx].Value = dir.normalized;
-                            newPos.x = penPos[penIdx].Value.x + Mathf.Clamp(localX, -penHalfW + slimeHalfW, penHalfW - slimeHalfW);
-                        }
-                        if (localY + slimeHalfH >= penHalfH || localY - slimeHalfH <= -penHalfH)
-                        {
-                            var dir = direction[groupIdx].Value;
-                            dir.y = -dir.y + Random.Range(-BOUNCE_OFFSET, 0);
-                            direction[groupIdx].Value = dir.normalized;
-                            newPos.y = penPos[penIdx].Value.y + Mathf.Clamp(localY, -penHalfH + slimeHalfH, penHalfH - slimeHalfH);
-                        }
-
-                    }
+                    brain.WalkCycleTime -= walkCycleDuration;
+                    brain.WanderSpeedMultiplierThisCycle = 0;
+                }
+                if (brain.WanderSpeedMultiplierThisCycle == 0)
+                {
+                    // brain.WanderSpeedMultiplierThisCycle = Random.Range(0.1f, 1.2f);
+                    brain.WanderSpeedMultiplierThisCycle = 1.0f;
                 }
 
-                position[groupIdx].Value = newPos;
-                
-            }
-        }
+                wanderSpeed *= brain.WanderSpeedMultiplierThisCycle * movementCurve.Evaluate(brain.WalkCycleTime / walkCycleDuration);
+                Vector3 newPos = position.Value + direction.Value * deltaTime * wanderSpeed;
+
+                var slimeHalfW = slimeBoundary.Width / 2f;
+                var slimeHalfH = slimeBoundary.Height / 2f;
+
+                var penQuery = entitiesDB.QueryEntities<RectBoundary, RectPosition>(PenGroupTag.Groups);
+                var penBoundary = entitiesDB.QueryEntity<RectBoundary>(brain.PenId);
+                var penPos = entitiesDB.QueryEntity<RectPosition>(brain.PenId);
+
+                var localX = newPos.x - penPos.Value.x;
+                var localY = newPos.y - penPos.Value.y;
+
+                var penHalfW = penBoundary.Width / 2f;
+                var penHalfH = penBoundary.Height / 2f;
+
+
+                if (localX + slimeHalfW >= penHalfW || localX - slimeHalfW <= -penHalfW)
+                {
+                    var dir = direction.Value;
+                    dir.x = -dir.x + Random.Range(0, BOUNCE_OFFSET);
+                    direction.Value = dir.normalized;
+                    newPos.x = penPos.Value.x + Mathf.Clamp(localX, -penHalfW + slimeHalfW, penHalfW - slimeHalfW);
+                }
+                if (localY + slimeHalfH >= penHalfH || localY - slimeHalfH <= -penHalfH)
+                {
+                    var dir = direction.Value;
+                    dir.y = -dir.y + Random.Range(-BOUNCE_OFFSET, 0);
+                    direction.Value = dir.normalized;
+                    newPos.y = penPos.Value.y + Mathf.Clamp(localY, -penHalfH + slimeHalfH, penHalfH - slimeHalfH);
+                }
+
+                position.Value = newPos;
+            });
     }
-    
+
     private EGID GetMainPenEGID()
     {
         var mainPenQuery = entitiesDB.QueryEntities<RectBoundary>(MainPenGroupTag.Groups);
@@ -98,7 +106,4 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
         }
         return default;
     }
-
-    
-    
 }

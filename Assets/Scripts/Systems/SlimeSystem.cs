@@ -187,7 +187,7 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                     rb.Height = rt.sizeDelta.y;
                 });
 
-            // Randomize position in pen
+            // Find random spawn position
             entitiesDB.TryGetComponent(id, groupID,
                 (ref SlimeBrain sb, ref RectPosition rp, ref RectBoundary rb) =>
                 {
@@ -205,7 +205,7 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
                             var yMax = rp.Value.y + penExtents.y - slimeExtents.y;
                             position = new(
                                 Random.Range(xMin, xMax),
-                                Random.Range(yMin, yMax)
+                                Random.value < 0.5f ? yMin : yMax
                             );
                         });
                     rp.Value = position;

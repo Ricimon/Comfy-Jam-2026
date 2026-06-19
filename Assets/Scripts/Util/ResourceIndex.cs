@@ -1,7 +1,7 @@
 using Svelto.DataStructures.Experimental;
 using UnityEngine;
 
-public struct ResourceIndex<T> where T : Object
+public struct ResourceIndex<T> where T : class
 {
     public ValueIndex ValueIndex;
 
