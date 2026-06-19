@@ -178,15 +178,18 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                 {
                                     closestPenColor = sortingPen.Type;
                                 }
-                                isSortingPen = closestPenColor != SlimeColor.None;
+                                else
+                                {
+                                    closestPenColor = SlimeColor.None;
+                                }
                             }
 
                         });
-
                     if (isOutOfBounds)
                     {
                         brain.PenId = closestPen;
                         penColor = closestPenColor;
+                        isSortingPen = penColor != SlimeColor.None;
                     }
                     // var gameCanvas = entitiesDB.GetSingletonComponent<GameCanvas>(CanvasGroup.Group);
                     // var slimeParent = resourceManagers.Get<GameObject>(gameCanvas.SlimesParentGoId);
