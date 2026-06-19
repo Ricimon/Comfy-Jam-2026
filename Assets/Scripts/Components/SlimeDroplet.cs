@@ -4,7 +4,7 @@ using UnityEngine;
 public struct SlimeDroplet : IEntityComponent
 {
     public Color Color;
-    public int TransformSiblingIndex;
+    public float TimeAlive;
 }
 
 public class SlimeDropletEntity : GenericEntityDescriptorAndGroup<

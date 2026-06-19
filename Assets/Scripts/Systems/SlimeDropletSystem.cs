@@ -20,6 +20,15 @@ public class SlimeDropletSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddE
 
     public void Update()
     {
+        entitiesDB.QueryEntities<SlimeDroplet, RectTransformReference>(SlimeDropletEntity.Group)
+            .Each((ref SlimeDroplet sd, ref RectTransformReference rtr) =>
+            {
+                var dt = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group).ValueSeconds;
+                sd.TimeAlive += dt;
+                var rt = rtr.Id.ToObject(resourceManagers);
+                var scale = Mathf.Min(sd.TimeAlive / 0.25f, 1.0f);
+                rt.localScale = scale * Vector3.one;
+            });
     }
 
     public void Add((uint start, uint end) rangeOfEntities, in EntityCollection<SlimeDroplet> entities,
@@ -42,9 +51,9 @@ public class SlimeDropletSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddE
                         var prefab = resourceManagers.Get<GameObject>(spawner.DropletPrefabId);
                         var parent = resourceManagers.Get<GameObject>(gameCanvas.SlimesParentGoId);
                         go = Object.Instantiate(prefab, parent.transform);
-                        go.transform.SetSiblingIndex(sdCopy.TransformSiblingIndex);
+                        go.transform.SetAsLastSibling();
                         gor.Id = resourceManagers.Add(go);
-                        rtr.Id = resourceManagers.Add(go.GetComponent<RectTransform>());
+                        rtr.Id = resourceManagers.Add(go.GetComponent<RectTransform>()).ToResourceIndex<RectTransform>();
                     }
                     if (go.TryGetComponent(out Image image))
                     {
@@ -57,7 +66,6 @@ public class SlimeDropletSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddE
                 {
                     fo.IsActive = true;
                     fo.RotationFollowsPath = true;
-                    fo.StartingPosition = rp.Value;
                 });
         }
     }

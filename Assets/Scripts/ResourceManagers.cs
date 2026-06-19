@@ -58,8 +58,12 @@ public class ResourceManagers
         if (resourceManagers.TryGetValue(typeof(T), out var rmo))
         {
             var rm = rmo as ResourceManager<T>;
-            resource = rm[index];
-            return true;
+            try
+            {
+                resource = rm[index];
+                return true;
+            }
+            catch (PreconditionException) { }
         }
         resource = default;
         return false;

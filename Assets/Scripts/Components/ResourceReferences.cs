@@ -1,5 +1,6 @@
 using Svelto.DataStructures.Experimental;
 using Svelto.ECS;
+using UnityEngine;
 
 public struct GameObjectReference : IEntityComponent
 {
@@ -8,5 +9,5 @@ public struct GameObjectReference : IEntityComponent
 
 public struct RectTransformReference : IEntityComponent
 {
-    public ValueIndex Id;
+    public ResourceIndex<RectTransform> Id;
 }

@@ -49,7 +49,7 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                     disguise.RemovalStartingPosition = slimeRp.Value;
                 }
 
-                var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group).ValueSeconds;
+                var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group).ValueSeconds;
                 ref var time = ref disguise.RemovalAnimatingTime;
                 time += deltaTime;
 
@@ -120,7 +120,7 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                 entitiesDB.TryGetComponent(id, groupID,
                     (ref RectTransformReference rtr) =>
                     {
-                        rtr.Id = rtId;
+                        rtr.Id = rtId.ToResourceIndex<RectTransform>();
                     });
                 entitiesDB.TryGetComponent(id, groupID,
                     (ref RectPosition rp) =>

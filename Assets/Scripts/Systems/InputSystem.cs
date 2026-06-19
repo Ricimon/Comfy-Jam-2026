@@ -10,7 +10,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
 {
     public EntitiesDB entitiesDB { get; set; }
 
-    private readonly GameObjectResourceManager gameObjectResourceManager;
+    private readonly ResourceManagers resourceManagers;
     private readonly InputAction clickAction;
     private readonly InputAction rightClickAction;
     private readonly InputAction pointAction;
@@ -21,9 +21,9 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
     private RectTransform canvasRt;
     private GraphicRaycaster grc;
 
-    public InputSystem(GameObjectResourceManager gameObjectResourceManager)
+    public InputSystem(ResourceManagers resourceManagers)
     {
-        this.gameObjectResourceManager = gameObjectResourceManager;
+        this.resourceManagers = resourceManagers;
 
         var defaultActions = UnityEngine.InputSystem.InputSystem.actions;
         clickAction = defaultActions.FindAction("Click");
@@ -43,7 +43,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
             if (count > 0)
             {
                 var goRef = goRefs[0];
-                var go = gameObjectResourceManager[goRef.Id];
+                var go = resourceManagers.Get<GameObject>(goRef.Id);
                 canvas = go.GetComponent<Canvas>();
                 canvasRt = go.GetComponent<RectTransform>();
                 grc = go.GetComponent<GraphicRaycaster>();
@@ -101,12 +101,15 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         brains[slimeIdx].MovementState = MovementState.Grabbed;
                     }
 
-                    entitiesDB.TryGetComponent(erh.EGID,
-                        (ref GameObjectReference slimeGor) =>
-                        {
-                            var slime = gameObjectResourceManager[slimeGor.Id];
-                            slime.transform.SetAsLastSibling();
-                        });
+                    // entitiesDB.TryGetComponent(erh.EGID,
+                    //     (ref GameObjectReference slimeGor) =>
+                    //     {
+                    //         var slime = resourceManagers.Get<GameObject>(slimeGor.Id);
+                    //         var gameCanvas = entitiesDB.GetSingletonComponent<GameCanvas>(CanvasGroup.Group);
+                    //         var grabbedSlimeParent = resourceManagers.Get<GameObject>(gameCanvas.GrabbedObjectGoId);
+                    //         slime.transform.SetParent(grabbedSlimeParent.transform);
+                    //         slime.transform.SetAsLastSibling();
+                    //     });
 
                     break;
                 }
@@ -117,8 +120,13 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
         {
             var canvasPosition = worldPosition / canvasRt.localScale.x;
             GetDraggingFilter().RunOnFilteredComponents(entitiesDB,
-                (ref RectPosition p) =>
+                (ref RectPosition p, ref Slime slime) =>
                 {
+                    if (!slime.CanPickUp)
+                    {
+                        GetDraggingFilter().Clear();
+                        return;
+                    }
                     p.Value = canvasPosition;
                 });
         }
@@ -129,7 +137,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
             var draggingFilter = GetDraggingFilter();
 
             draggingFilter.RunOnFilteredComponents(entitiesDB,
-                (ref RectPosition p, ref Slime slime, ref SlimeBrain brain, ref Direction direction) =>
+                (EGID egid, ref RectPosition p, ref Slime slime, ref SlimeBrain brain, ref Direction direction) =>
                 {
                     var position = p.Value;
                     EGID newPenId = default;
@@ -142,7 +150,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         {
                             if (RectUtils.CreateCenteredRect(pp.Value, new(pb.Width, pb.Height)).Contains(position))
                             {
-                                var penGo = gameObjectResourceManager[gor.Id];
+                                var penGo = resourceManagers.Get<GameObject>(gor.Id);
                                 if (penGo != null)
                                 {
                                     if (entitiesDB.TryGetEntity<SortingPen>(egid, out var sortingPen))
@@ -161,6 +169,13 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                 newPenId = egid;
                             }
                         });
+
+                    // var gameCanvas = entitiesDB.GetSingletonComponent<GameCanvas>(CanvasGroup.Group);
+                    // var slimeParent = resourceManagers.Get<GameObject>(gameCanvas.SlimesParentGoId);
+                    // var gor = entitiesDB.QueryEntity<GameObjectReference>(egid);
+                    // var go = resourceManagers.Get<GameObject>(gor.Id);
+                    // go.transform.SetParent(slimeParent.transform);
+                    // go.transform.SetAsLastSibling();
 
                     brain.MovementState = MovementState.Wander;
                     direction.Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;

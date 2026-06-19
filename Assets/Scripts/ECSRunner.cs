@@ -4,7 +4,7 @@ public class ECSRunner : MonoBehaviour
 {
     private void Start()
     {
-        GameContext.World.Entity<UpdateDeltaTimeEntityDescriptor>(UpdateDeltaTimeEntityDescriptor.Group);
+        GameContext.World.Entity<UpdateDeltaTimeEntity>(UpdateDeltaTimeEntity.Group);
     }
 
     private void Update()
