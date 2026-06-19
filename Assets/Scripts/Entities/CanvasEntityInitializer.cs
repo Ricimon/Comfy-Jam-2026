@@ -7,9 +7,9 @@ public class CanvasEntityInitializer : MonoBehaviour
 
     private void Start()
     {
-        var id = GameContext.GameObjectResourceManager.Add(gameObject);
-        var slimesParentId = GameContext.GameObjectResourceManager.Add(slimesParent);
-        var grabbedObjectId = GameContext.GameObjectResourceManager.Add(grabbedObjectParent);
+        var id = GameContext.ResourceManagers.Add(gameObject);
+        var slimesParentId = GameContext.ResourceManagers.Add(slimesParent);
+        var grabbedObjectId = GameContext.ResourceManagers.Add(grabbedObjectParent);
         var entity = GameContext.World.Entity<CanvasEntityDescriptor>(CanvasGroup.Group);
 
         entity.Init(new GameCanvas

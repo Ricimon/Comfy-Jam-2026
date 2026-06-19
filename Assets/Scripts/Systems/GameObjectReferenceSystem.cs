@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class GameObjectReferenceSystem : ISystem, IReactOnRemoveEx<GameObjectReference>
 {
-    private readonly GameObjectResourceManager gameObjectResourceManager;
+    private readonly ResourceManagers resourceManagers;
 
-    public GameObjectReferenceSystem(GameObjectResourceManager gameObjectResourceManager)
+    public GameObjectReferenceSystem(ResourceManagers resourceManagers)
     {
-        this.gameObjectResourceManager = gameObjectResourceManager;
+        this.resourceManagers = resourceManagers;
     }
 
     public void Update()
@@ -25,8 +25,8 @@ public class GameObjectReferenceSystem : ISystem, IReactOnRemoveEx<GameObjectRef
             ref var gor = ref gors[i];
             try
             {
-                var go = gameObjectResourceManager[gor.Id];
-                gameObjectResourceManager.Remove(gor.Id);
+                var go = gor.Id.ToObject(resourceManagers);
+                resourceManagers.Remove<GameObject>(gor.Id);
 
                 Object.Destroy(go);
             }

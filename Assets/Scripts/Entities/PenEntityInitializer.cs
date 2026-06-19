@@ -7,7 +7,7 @@ public class PenEntityInitializer : MonoBehaviour
 
     private void Start()
     {
-        var id = GameContext.GameObjectResourceManager.Add(gameObject);
+        var id = GameContext.ResourceManagers.Add(gameObject);
 
         var isSortingPen = sortingPenType != SlimeColor.None;
 

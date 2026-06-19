@@ -19,7 +19,10 @@ public class ResourceManagers
     {
         if (!resourceManagers.ContainsKey(typeof(T)))
         {
-            resourceManagers.Add(typeof(T), new ResourceManager<T>());
+            var nrm = new ResourceManager<T>();
+            resourceManagers.Add(typeof(T), nrm);
+            // This needs to be here so that invalid ValueIndexes return a null GameObject on release builds
+            nrm.Add(null);
         }
         var rm = resourceManagers[typeof(T)] as ResourceManager<T>;
         return rm.Add(resource);
@@ -32,13 +35,14 @@ public class ResourceManagers
             var rm = rmo as ResourceManager<T>;
             try
             {
-                _ = rm[index];
+                var resource = rm[index];
+                if (resource == null)
+                {
+                    return false;
+                }
                 return true;
             }
-            catch (PreconditionException)
-            {
-                return false;
-            }
+            catch (PreconditionException) { }
         }
         return false;
     }
@@ -61,6 +65,10 @@ public class ResourceManagers
             try
             {
                 resource = rm[index];
+                if (resource == null)
+                {
+                    return false;
+                }
                 return true;
             }
             catch (PreconditionException) { }

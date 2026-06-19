@@ -78,13 +78,7 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
             var id = entityIds[i];
             ref var gor = ref gors[i];
 
-            GameObject go;
-
-            try
-            {
-                go = resourceManagers.Get<GameObject>(gor.Id);
-            }
-            catch (PreconditionException)
+            if (!resourceManagers.TryGet(gor.Id, out GameObject go))
             {
                 // Create GameObject
                 if (!entitiesDB.TryGetSingletonComponent(DisguiseSpawnerEntity.Group, out DisguiseSpawner disguiseSpawner))

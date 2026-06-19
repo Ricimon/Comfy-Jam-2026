@@ -142,17 +142,15 @@ public class SlimeSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<GameO
             var id = entityIds[i];
             ref var gor = ref gors[i];
 
-            GameObject go;
             RectTransform rt;
             ValueIndex rtId;
 
-            try
+            if (resourceManagers.TryGet(gor.Id, out GameObject go))
             {
-                go = resourceManagers.Get<GameObject>(gor.Id);
                 rt = go.GetComponent<RectTransform>();
                 rtId = GameContext.RectTransformResourceManager.Add(rt);
             }
-            catch (PreconditionException)
+            else
             {
                 // Create GameObject
                 if (!entitiesDB.TryGetSingletonComponent(SlimeSpawnerGroup.Group, out SlimeSpawner slimeSpawner))

@@ -5,7 +5,6 @@ public class GameContext
 {
     public static World World;
     public static ResourceManagers ResourceManagers;
-    public static GameObjectResourceManager GameObjectResourceManager;
     public static RectTransformResourceManager RectTransformResourceManager;
     public static AnimationCurveResourceManager AnimationCurveResourceManager;
     public static AudioClipResourceManager AudioClipResourceManager;
@@ -14,12 +13,10 @@ public class GameContext
     private static void Initialize()
     {
         World = new World();
-        GameObjectResourceManager = new();
+        ResourceManagers = new();
         RectTransformResourceManager = new();
         AnimationCurveResourceManager = new();
-        ResourceManagers = new();
         AudioClipResourceManager = new();
-        ResourceManagers.AddPrebuiltResourceManager<GameObject>(GameObjectResourceManager);
         ResourceManagers.AddPrebuiltResourceManager<RectTransform>(RectTransformResourceManager);
         ResourceManagers.AddPrebuiltResourceManager<AnimationCurve>(AnimationCurveResourceManager);
         ResourceManagers.AddPrebuiltResourceManager<AudioClip>(AudioClipResourceManager);
@@ -40,7 +37,7 @@ public class GameContext
 
 
         // Systems
-        World.AddSystem(new GameObjectReferenceSystem(GameObjectResourceManager));
+        World.AddSystem(new GameObjectReferenceSystem(ResourceManagers));
         World.AddSystem(new RectTransformReferenceSystem(RectTransformResourceManager));
         World.AddSystem(new UpdateDeltaTimeSystem());
         World.AddSystem(new ElapsedTimeSystem());

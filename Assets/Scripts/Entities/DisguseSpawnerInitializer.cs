@@ -9,7 +9,7 @@ public class DisguseSpawnerInitializer : MonoBehaviour
 
     private void Start()
     {
-        var goId = GameContext.GameObjectResourceManager.Add(gameObject);
+        var goId = GameContext.ResourceManagers.Add(gameObject);
 
         GameContext.World.RemoveEntitiesFromGroup(DisguiseSpawnerEntity.Group);
 
@@ -17,10 +17,10 @@ public class DisguseSpawnerInitializer : MonoBehaviour
 
         entity.Init(new DisguiseSpawner
         {
-            DisguiseDefaultPrefabId = GameContext.GameObjectResourceManager.Add(disguiseDefaultPrefab),
-            DisguiseBlueMaskPrefabId = GameContext.GameObjectResourceManager.Add(disguiseBlueMaskPrefab),
-            DisguiseYellowHoodiePrefabId = GameContext.GameObjectResourceManager.Add(disguiseYellowHoodiePrefab),
-            DisguiseBlueHoodiePrefabId = GameContext.GameObjectResourceManager.Add(disguiseBlueHoodiePrefab),
+            DisguiseDefaultPrefabId = GameContext.ResourceManagers.Add(disguiseDefaultPrefab),
+            DisguiseBlueMaskPrefabId = GameContext.ResourceManagers.Add(disguiseBlueMaskPrefab),
+            DisguiseYellowHoodiePrefabId = GameContext.ResourceManagers.Add(disguiseYellowHoodiePrefab),
+            DisguiseBlueHoodiePrefabId = GameContext.ResourceManagers.Add(disguiseBlueHoodiePrefab),
         });
 
         entity.Init(new GameObjectReference

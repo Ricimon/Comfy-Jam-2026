@@ -4,7 +4,7 @@ public class SlimeEntityInitializer : MonoBehaviour
 {
     private void Start()
     {
-        var goId = GameContext.GameObjectResourceManager.Add(gameObject);
+        var goId = GameContext.ResourceManagers.Add(gameObject);
         var entity = SlimeSpawnerSystem.SpawnSlime(GameContext.World, SlimeColor.None);
 
         entity.Init(new GameObjectReference

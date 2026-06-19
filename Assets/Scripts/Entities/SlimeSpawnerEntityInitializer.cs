@@ -9,10 +9,10 @@ public class SlimeSpawnerEntityInitializer : MonoBehaviour
 
     public void Start()
     {
-        var goId = GameContext.GameObjectResourceManager.Add(gameObject);
-        var id = GameContext.GameObjectResourceManager.Add(slimePrefab);
-        var idYellow = GameContext.GameObjectResourceManager.Add(slimeYellowPrefab);
-        var idBlue = GameContext.GameObjectResourceManager.Add(slimeBluePrefab);
+        var goId = GameContext.ResourceManagers.Add(gameObject);
+        var id = GameContext.ResourceManagers.Add(slimePrefab);
+        var idYellow = GameContext.ResourceManagers.Add(slimeYellowPrefab);
+        var idBlue = GameContext.ResourceManagers.Add(slimeBluePrefab);
         var idSpawnRate = GameContext.AnimationCurveResourceManager.Add(spawnerConfig.SpawnRate);
 
         GameContext.World.RemoveEntitiesFromGroup(SlimeSpawnerGroup.Group);
