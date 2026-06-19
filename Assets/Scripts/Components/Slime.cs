@@ -15,4 +15,6 @@ public struct Slime : IEntityComponent
     public SlimeColor SlimeColor;
     public ValueIndex SlimeGameObjectId;
     public EGID DisguiseId;
+    public float TimeAlive;
+    public float TimePlayingDeathAnimation;
 }

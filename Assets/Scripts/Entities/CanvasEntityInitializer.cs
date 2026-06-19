@@ -14,8 +14,8 @@ public class CanvasEntityInitializer : MonoBehaviour
 
         entity.Init(new GameCanvas
         {
-            SlimesParentGoId = slimesParentId,
-            GrabbedObjectGoId = grabbedObjectId,
+            SlimesParentGoId = slimesParentId.ToResourceIndex<GameObject>(),
+            GrabbedObjectGoId = grabbedObjectId.ToResourceIndex<GameObject>(),
         });
 
         entity.Init(new GameObjectReference

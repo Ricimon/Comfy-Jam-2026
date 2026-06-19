@@ -1,8 +1,8 @@
-using Svelto.DataStructures.Experimental;
 using Svelto.ECS;
+using UnityEngine;
 
 public struct GameCanvas : IEntityComponent
 {
-    public ValueIndex SlimesParentGoId;
-    public ValueIndex GrabbedObjectGoId;
+    public ResourceIndex<GameObject> SlimesParentGoId;
+    public ResourceIndex<GameObject> GrabbedObjectGoId;
 }

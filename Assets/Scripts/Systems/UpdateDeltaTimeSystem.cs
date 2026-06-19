@@ -17,7 +17,7 @@ public class UpdateDeltaTimeSystem : ISystem, IQueryingEntitiesEngine
         if (pause[0].IsPaused)
             return;
 
-        var (udt, count) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group);
+        var (udt, count) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group);
         for (var i = 0; i < count; i++)
         {
             udt[i].ValueSeconds = Time.deltaTime;

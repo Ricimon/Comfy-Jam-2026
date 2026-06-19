@@ -5,6 +5,8 @@ public enum DisguiseType
 {
     None,
     Default,
+    YellowHoodie,
+    BlueHoodie,
 }
 
 public struct Disguise : IEntityComponent

@@ -61,7 +61,7 @@ public class SlimeFlightSystem : ISystem, IQueryingEntitiesEngine
                     sb.FlightRotationDirection = Random.value < 0.5f ? -1 : 1;
                 }
 
-                var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group).ValueSeconds;
+                var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group).ValueSeconds;
                 ref var time = ref sb.FlightAnimationTime;
                 time += deltaTime;
 

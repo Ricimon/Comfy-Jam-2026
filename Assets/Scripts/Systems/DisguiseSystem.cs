@@ -8,14 +8,12 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
     public EntitiesDB entitiesDB { get; set; }
 
     private readonly World world;
-    private readonly GameObjectResourceManager gameObjectResourceManager;
-    private readonly RectTransformResourceManager rectTransformResourceManager;
+    private readonly ResourceManagers resourceManagers;
 
-    public DisguiseSystem(World world, GameObjectResourceManager gameObjectResourceManager, RectTransformResourceManager rectTransformResourceManager)
+    public DisguiseSystem(World world, ResourceManagers resourceManagers)
     {
         this.world = world;
-        this.gameObjectResourceManager = gameObjectResourceManager;
-        this.rectTransformResourceManager = rectTransformResourceManager;
+        this.resourceManagers = resourceManagers;
     }
 
     public void Ready() { }
@@ -31,9 +29,9 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                 {
                     var slimeGor = entitiesDB.GetComponent<GameObjectReference>(disguise.SlimeId);
                     var slimeRp = entitiesDB.GetComponent<RectPosition>(disguise.SlimeId);
-                    var slimeGo = gameObjectResourceManager[slimeGor.Id];
+                    var slimeGo = resourceManagers.Get<GameObject>(slimeGor.Id);
 
-                    var go = gameObjectResourceManager[gor.Id];
+                    var go = resourceManagers.Get<GameObject>(gor.Id);
 
                     // Remove from Slime
                     disguise.SlimeId = default;
@@ -49,7 +47,7 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                     disguise.RemovalStartingPosition = slimeRp.Value;
                 }
 
-                var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group).ValueSeconds;
+                var deltaTime = entitiesDB.GetSingletonComponent<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group).ValueSeconds;
                 ref var time = ref disguise.RemovalAnimatingTime;
                 time += deltaTime;
 
@@ -63,7 +61,7 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                 var y = disguise.RemovalStartingPosition.y + disguise.RemovalFlyVector.y * time + 0.5f * -1000.0f * time * time;
                 rp.Value = new(x, y);
 
-                var rt = rectTransformResourceManager[rtr.Id];
+                var rt = rtr.Id.ToObject(resourceManagers);
                 rt.Rotate(0, 0, disguise.RemovalRotationSpeed * deltaTime);
             });
     }
@@ -82,7 +80,7 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
 
             try
             {
-                go = gameObjectResourceManager[gor.Id];
+                go = resourceManagers.Get<GameObject>(gor.Id);
             }
             catch (PreconditionException)
             {
@@ -95,7 +93,9 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                 var disguise = entitiesDB.QueryEntity<Disguise>(id, groupID);
                 GameObject prefab = disguise.Type switch
                 {
-                    DisguiseType.Default => gameObjectResourceManager[disguiseSpawner.DisguiseDefaultPrefabId],
+                    DisguiseType.Default => disguiseSpawner.DisguiseDefaultPrefabId.ToObject(resourceManagers),
+                    DisguiseType.YellowHoodie => disguiseSpawner.DisguiseYellowHoodiePrefabId.ToObject(resourceManagers),
+                    DisguiseType.BlueHoodie => disguiseSpawner.DisguiseBlueHoodiePrefabId.ToObject(resourceManagers),
                     _ => null,
                 };
 
@@ -109,18 +109,18 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                 var slime = entitiesDB.TryGetComponent(disguise.SlimeId,
                     (ref GameObjectReference slimeGor) =>
                     {
-                        parent = gameObjectResourceManager[slimeGor.Id];
+                        parent = resourceManagers.Get<GameObject>(slimeGor.Id);
                     });
 
                 go = Object.Instantiate(prefab, parent.transform);
-                gor.Id = gameObjectResourceManager.Add(go);
+                gor.Id = resourceManagers.Add(go);
 
                 var rt = go.GetComponent<RectTransform>();
-                var rtId = rectTransformResourceManager.Add(rt);
+                var rtId = resourceManagers.Add(rt);
                 entitiesDB.TryGetComponent(id, groupID,
                     (ref RectTransformReference rtr) =>
                     {
-                        rtr.Id = rtId;
+                        rtr.Id = rtId.ToResourceIndex<RectTransform>();
                     });
                 entitiesDB.TryGetComponent(id, groupID,
                     (ref RectPosition rp) =>

@@ -15,7 +15,7 @@ public class DifficultySystem : ISystem, IQueryingEntitiesEngine
     public void Update()
     {
         var (c1, count1) = entitiesDB.QueryEntities<SlimeSpawner>(SlimeSpawnerGroup.Group);
-        var (c2, count2) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group);
+        var (c2, count2) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group);
         var deltaTime = count2 > 0 ? c2[0].ValueSeconds : 0;
 
 

@@ -7,6 +7,12 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
     public EntitiesDB entitiesDB { get; set; }
 
     private readonly AnimationCurveResourceManager animationCurveResourceManager;
+    private readonly DisguiseType[] possibleDisguises = new[]
+    {
+        DisguiseType.Default,
+        DisguiseType.YellowHoodie,
+        DisguiseType.BlueHoodie,
+    };
 
     public SlimeSpawnerSystem(AnimationCurveResourceManager animationCurveResourceManager)
     {
@@ -73,7 +79,7 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
     public void Update()
     {
         var (c1, count1) = entitiesDB.QueryEntities<SlimeSpawner>(SlimeSpawnerGroup.Group);
-        var (c2, count2) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group);
+        var (c2, count2) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group);
         var deltaTime = count2 > 0 ? c2[0].ValueSeconds : 0;
         var (elapsedTime, count) = entitiesDB.QueryEntities<ElapsedTime>(GameStatTag.Group);
 
@@ -89,7 +95,12 @@ public class SlimeSpawnerSystem : ISystem, IQueryingEntitiesEngine
             {
                 var spawnRateCurve = animationCurveResourceManager[spawner.SpawnRateCurveId];
                 var slimeColor = Random.value < 0.5f ? SlimeColor.Blue : SlimeColor.Yellow;
-                var disguise = Random.value < 0.5f ? DisguiseType.None : DisguiseType.Default;
+                var hasDisguise = Random.value < 0.5f;
+                var disguise = DisguiseType.None;
+                if (hasDisguise)
+                {
+                    disguise = possibleDisguises[Random.Range(0, possibleDisguises.Length)];
+                }
                 SpawnSlime(GameContext.World, slimeColor, disguise);
                 spawner.TimeUntilSpawn = spawnRateCurve.Evaluate(elapsedTime[0].ValueSeconds);
             }

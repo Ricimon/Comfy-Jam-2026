@@ -37,7 +37,7 @@ public class GameContext
         gameStatEntity.Init(new ElapsedTime { ValueSeconds = 0 });
         gameStatEntity.Init(new Pause { IsPaused = true });
 
-        
+
 
         // Systems
         World.AddSystem(new GameObjectReferenceSystem(GameObjectResourceManager));
@@ -46,13 +46,13 @@ public class GameContext
         World.AddSystem(new ElapsedTimeSystem());
         World.AddSystem(new GameStatSystem());
         World.AddSystem(new RectPositionSystem(RectTransformResourceManager));
-        World.AddSystem(new InputSystem(GameObjectResourceManager));
+        World.AddSystem(new InputSystem(ResourceManagers));
         World.AddSystem(new SlimeSpawnerSystem(AnimationCurveResourceManager));
-        World.AddSystem(new SlimeSystem(ResourceManagers));
+        World.AddSystem(new SlimeSystem(World, ResourceManagers));
         World.AddSystem(new SlimeWanderSystem());
         World.AddSystem(new SlimeFlightSystem(RectTransformResourceManager, AnimationCurveResourceManager));
         World.AddSystem(new SlimeDropletSystem(ResourceManagers));
-        World.AddSystem(new DisguiseSystem(World, GameObjectResourceManager, RectTransformResourceManager));
+        World.AddSystem(new DisguiseSystem(World, ResourceManagers));
         World.AddSystem(new FlyawayObjectSystem(World, ResourceManagers));
         
     }

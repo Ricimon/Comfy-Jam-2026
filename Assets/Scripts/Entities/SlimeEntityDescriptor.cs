@@ -1,14 +1,11 @@
+using ECS;
 using Svelto.ECS;
 
-public class SlimeEntityDescriptor : IEntityDescriptor
+public class SlimeEntityDescriptor : ExtendibleEntityDescriptor<BaseEntityDescriptor>
 {
-    private static readonly IComponentBuilder[] _componentBuilders;
-
-    public IComponentBuilder[] componentsToBuild => _componentBuilders;
-
-    static SlimeEntityDescriptor()
+    public SlimeEntityDescriptor()
     {
-        _componentBuilders = new IComponentBuilder[]
+        ExtendWith(new IComponentBuilder[]
         {
             new ComponentBuilder<GameObjectReference>(),
             new ComponentBuilder<Slime>(),
@@ -17,7 +14,7 @@ public class SlimeEntityDescriptor : IEntityDescriptor
             new ComponentBuilder<RectPosition>(),
             new ComponentBuilder<RectBoundary>(),
             new ComponentBuilder<Direction>(),
-        };
+        });
     }
 }
 

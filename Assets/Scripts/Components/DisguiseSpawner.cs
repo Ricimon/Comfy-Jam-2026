@@ -1,9 +1,11 @@
-using Svelto.DataStructures.Experimental;
 using Svelto.ECS;
+using UnityEngine;
 
 public struct DisguiseSpawner : IEntityComponent
 {
-    public ValueIndex DisguiseDefaultPrefabId;
+    public ResourceIndex<GameObject> DisguiseDefaultPrefabId;
+    public ResourceIndex<GameObject> DisguiseYellowHoodiePrefabId;
+    public ResourceIndex<GameObject> DisguiseBlueHoodiePrefabId;
 }
 
 public class DisguiseSpawnerEntity : GenericEntityDescriptorAndGroup<

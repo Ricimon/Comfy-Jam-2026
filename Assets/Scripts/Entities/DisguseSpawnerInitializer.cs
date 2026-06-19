@@ -3,11 +3,12 @@ using UnityEngine;
 public class DisguseSpawnerInitializer : MonoBehaviour
 {
     public GameObject disguiseDefaultPrefab;
+    public GameObject disguiseYellowHoodiePrefab;
+    public GameObject disguiseBlueHoodiePrefab;
 
     private void Start()
     {
         var goId = GameContext.GameObjectResourceManager.Add(gameObject);
-        var idDefault = GameContext.GameObjectResourceManager.Add(disguiseDefaultPrefab);
 
         GameContext.World.RemoveEntitiesFromGroup(DisguiseSpawnerEntity.Group);
 
@@ -15,7 +16,9 @@ public class DisguseSpawnerInitializer : MonoBehaviour
 
         entity.Init(new DisguiseSpawner
         {
-            DisguiseDefaultPrefabId = idDefault,
+            DisguiseDefaultPrefabId = GameContext.GameObjectResourceManager.Add(disguiseDefaultPrefab),
+            DisguiseYellowHoodiePrefabId = GameContext.GameObjectResourceManager.Add(disguiseYellowHoodiePrefab),
+            DisguiseBlueHoodiePrefabId = GameContext.GameObjectResourceManager.Add(disguiseBlueHoodiePrefab),
         });
 
         entity.Init(new GameObjectReference

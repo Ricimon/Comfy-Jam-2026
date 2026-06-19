@@ -19,7 +19,7 @@ public class SlimeWanderSystem : ISystem, IQueryingEntitiesEngine
     {
         var slimeBrainGroup = entitiesDB.FindGroups<SlimeBrain, RectPosition, RectBoundary, Direction>();
         var slimeQuery = entitiesDB.QueryEntities<SlimeBrain, RectPosition, RectBoundary, Direction>(slimeBrainGroup);
-        var (c2, count2) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntityDescriptor.Group);
+        var (c2, count2) = entitiesDB.QueryEntities<UpdateDeltaTime>(UpdateDeltaTimeEntity.Group);
         var deltaTime = count2 > 0 ? c2[0].ValueSeconds : 0;
 
         var penQuery = entitiesDB.QueryEntities<RectBoundary, RectPosition>(PenGroupTag.Groups);
