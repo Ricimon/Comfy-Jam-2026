@@ -1155,6 +1155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DisguseSpawnerInitializer
   disguiseDefaultPrefab: {fileID: 3970974427852074282, guid: 22e9312dee0eaab4792dbdbfc17b04e4, type: 3}
+  disguiseBlueMaskPrefab: {fileID: 3970974427852074282, guid: 0e4b372482532a74d8fc2eb7bf096cfa, type: 3}
   disguiseYellowHoodiePrefab: {fileID: 3970974427852074282, guid: a013022b8ecd44640b8129b3ce34d604, type: 3}
   disguiseBlueHoodiePrefab: {fileID: 3970974427852074282, guid: 38fddb1c188c12449b80b1fb35dd867e, type: 3}
 --- !u!1 &1485607299
@@ -1476,6 +1477,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 427017567}
     m_Modifications:
+    - target: {fileID: 18131978551770614, guid: 32d1fcf646d6ac047a3b09426507d1eb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 575641058796996519, guid: 32d1fcf646d6ac047a3b09426507d1eb, type: 3}
       propertyPath: m_fontSize
       value: 70

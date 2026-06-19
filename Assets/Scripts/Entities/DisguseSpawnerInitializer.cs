@@ -3,6 +3,7 @@ using UnityEngine;
 public class DisguseSpawnerInitializer : MonoBehaviour
 {
     public GameObject disguiseDefaultPrefab;
+    public GameObject disguiseBlueMaskPrefab;
     public GameObject disguiseYellowHoodiePrefab;
     public GameObject disguiseBlueHoodiePrefab;
 
@@ -17,6 +18,7 @@ public class DisguseSpawnerInitializer : MonoBehaviour
         entity.Init(new DisguiseSpawner
         {
             DisguiseDefaultPrefabId = GameContext.GameObjectResourceManager.Add(disguiseDefaultPrefab),
+            DisguiseBlueMaskPrefabId = GameContext.GameObjectResourceManager.Add(disguiseBlueMaskPrefab),
             DisguiseYellowHoodiePrefabId = GameContext.GameObjectResourceManager.Add(disguiseYellowHoodiePrefab),
             DisguiseBlueHoodiePrefabId = GameContext.GameObjectResourceManager.Add(disguiseBlueHoodiePrefab),
         });

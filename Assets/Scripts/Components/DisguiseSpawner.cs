@@ -4,6 +4,7 @@ using UnityEngine;
 public struct DisguiseSpawner : IEntityComponent
 {
     public ResourceIndex<GameObject> DisguiseDefaultPrefabId;
+    public ResourceIndex<GameObject> DisguiseBlueMaskPrefabId;
     public ResourceIndex<GameObject> DisguiseYellowHoodiePrefabId;
     public ResourceIndex<GameObject> DisguiseBlueHoodiePrefabId;
 }
