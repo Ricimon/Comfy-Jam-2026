@@ -178,15 +178,18 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                                 {
                                     closestPenColor = sortingPen.Type;
                                 }
-                                isSortingPen = closestPenColor != SlimeColor.None;
+                                else
+                                {
+                                    closestPenColor = SlimeColor.None;
+                                }
                             }
 
                         });
-
                     if (isOutOfBounds)
                     {
                         brain.PenId = closestPen;
                         penColor = closestPenColor;
+                        isSortingPen = penColor != SlimeColor.None;
                     }
                     brain.MovementState = MovementState.Wander;
                     direction.Value = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
