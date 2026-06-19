@@ -5,6 +5,7 @@ public enum DisguiseType
 {
     None,
     Default,
+    BlueMask,
     YellowHoodie,
     BlueHoodie,
 }

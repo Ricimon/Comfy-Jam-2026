@@ -96,6 +96,7 @@ public class DisguiseSystem : ISystem, IQueryingEntitiesEngine, IReactOnAddEx<Ga
                 GameObject prefab = disguise.Type switch
                 {
                     DisguiseType.Default => disguiseSpawner.DisguiseDefaultPrefabId.ToObject(resourceManagers),
+                    DisguiseType.BlueMask => disguiseSpawner.DisguiseBlueMaskPrefabId.ToObject(resourceManagers),
                     DisguiseType.YellowHoodie => disguiseSpawner.DisguiseYellowHoodiePrefabId.ToObject(resourceManagers),
                     DisguiseType.BlueHoodie => disguiseSpawner.DisguiseBlueHoodiePrefabId.ToObject(resourceManagers),
                     _ => null,
