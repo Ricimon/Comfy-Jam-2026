@@ -101,16 +101,7 @@ public class InputSystem : ISystem, IQueryingEntitiesEngine
                         brains[slimeIdx].MovementState = MovementState.Grabbed;
                     }
 
-                    // entitiesDB.TryGetComponent(erh.EGID,
-                    //     (ref GameObjectReference slimeGor) =>
-                    //     {
-                    //         var slime = resourceManagers.Get<GameObject>(slimeGor.Id);
-                    //         var gameCanvas = entitiesDB.GetSingletonComponent<GameCanvas>(CanvasGroup.Group);
-                    //         var grabbedSlimeParent = resourceManagers.Get<GameObject>(gameCanvas.GrabbedObjectGoId);
-                    //         slime.transform.SetParent(grabbedSlimeParent.transform);
-                    //         slime.transform.SetAsLastSibling();
-                    //     });
-
+                    AudioClipSystem.PlaySFX(SFX.Pickup);
                     break;
                 }
             }
