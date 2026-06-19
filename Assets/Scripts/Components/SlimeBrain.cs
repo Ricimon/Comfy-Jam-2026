@@ -8,6 +8,9 @@ public struct SlimeBrain : IEntityComponent
     public EGID PenId;
     public bool RandomizePositionInPen;
 
+    public float WanderSpeedMultiplierThisCycle;
+    public float WalkCycleTime;
+
     // Flight animation parameters
     public float FlightAnimationTime;
     public Vector2 FlightStartingPosition;

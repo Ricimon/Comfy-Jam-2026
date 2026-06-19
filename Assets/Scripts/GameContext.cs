@@ -49,7 +49,7 @@ public class GameContext
         World.AddSystem(new InputSystem(ResourceManagers));
         World.AddSystem(new SlimeSpawnerSystem(AnimationCurveResourceManager));
         World.AddSystem(new SlimeSystem(World, ResourceManagers));
-        World.AddSystem(new SlimeWanderSystem());
+        World.AddSystem(new SlimeWanderSystem(ResourceManagers));
         World.AddSystem(new SlimeFlightSystem(RectTransformResourceManager, AnimationCurveResourceManager));
         World.AddSystem(new SlimeDropletSystem(ResourceManagers));
         World.AddSystem(new DisguiseSystem(World, ResourceManagers));
